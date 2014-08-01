@@ -1,0 +1,70 @@
+#stream-presence-data .data-list {
+  background-color: #f6f6f6; }
+  #stream-presence-data .data-list ul li {
+    font-size: 10px; }
+    #stream-presence-data .data-list ul li menu {
+      font-size: 10px; }
+    #stream-presence-data .data-list ul li a {
+      font-size: 10px; }
+    #stream-presence-data .data-list ul li div.identity {
+      font-size: 10px; }
+    #stream-presence-data .data-list ul li div.content {
+      font-size: 10px; }
+#stream-presence-data .data-list li:first-of-type {
+  background-color: white; }
+  #stream-presence-data .data-list li:first-of-type .presence-item-identity {
+    color: #cccccc; }
+  #stream-presence-data .data-list li:first-of-type .presence-occupants {
+    color: #666666; }
+  #stream-presence-data .data-list li:first-of-type .presence-uuids pre {
+    outline: 0.5px solid #cccccc;
+    padding: 10px 20px;
+    font-family: Menlo, "Bitstream Vera Sans Mono", "DejaVu Sans Mono", Monaco, Consolas, monospace;
+    font-size: 10px;
+    line-height: 1.5;
+    margin: 10px;
+    white-space: pre;
+    color: black; }
+  #stream-presence-data .data-list li:first-of-type .presence-uuids .string {
+    color: #606060; }
+  #stream-presence-data .data-list li:first-of-type .presence-uuids .number {
+    color: blue; }
+  #stream-presence-data .data-list li:first-of-type .presence-uuids .boolean {
+    color: firebrick; }
+  #stream-presence-data .data-list li:first-of-type .presence-uuids .null {
+    color: gray; }
+  #stream-presence-data .data-list li:first-of-type .presence-uuids .key {
+    color: #333333;
+    font-weight: bold; }
+#stream-presence-data .presence-item-container {
+  padding: 10px;
+  border-bottom: 1px solid #eeeeee; }
+#stream-presence-data .presence-item-info .presence-item-identity {
+  font-family: Menlo, "Bitstream Vera Sans Mono", "DejaVu Sans Mono", Monaco, Consolas, monospace;
+  font-size: 12px;
+  color: #dddddd;
+  float: right; }
+#stream-presence-data .presence-item-content .presence-occupants {
+  font-weight: bold;
+  text-align: right;
+  color: #bbbbbb; }
+#stream-presence-data .presence-item-content .presence-uuids pre {
+  outline: 0.5px solid #cccccc;
+  padding: 10px 20px;
+  font-family: Menlo, "Bitstream Vera Sans Mono", "DejaVu Sans Mono", Monaco, Consolas, monospace;
+  font-size: 10px;
+  line-height: 1.5;
+  margin: 10px;
+  white-space: pre;
+  color: #888888; }
+#stream-presence-data .presence-item-content .presence-uuids .string {
+  color: #aaaaaa; }
+#stream-presence-data .presence-item-content .presence-uuids .number {
+  color: blue; }
+#stream-presence-data .presence-item-content .presence-uuids .boolean {
+  color: firebrick; }
+#stream-presence-data .presence-item-content .presence-uuids .null {
+  color: gray; }
+#stream-presence-data .presence-item-content .presence-uuids .key {
+  color: #333333;
+  font-weight: bold; }

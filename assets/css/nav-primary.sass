@@ -1,0 +1,153 @@
+$nav-primary-width: 250px               // also specified in main.sass (make sure they are same)
+$nav-primary-content-padding: 10px      // also specified in main.sass (make sure they are same)
+$nav-background: #171D1F                // also specified in main.sass (make sure they are same)
+$nav-hover-selected-border-radius: 9px
+
+#nav-primary
+  ul
+    outline: -webkit-focus-ring-color auto 0px
+    outline-color: -webkit-focus-ring-color
+    outline-style: auto
+    outline-width: 0px
+    outline: none
+
+  .nav-main-title
+    color: #777
+    float: left
+    padding: 16px 13px
+    font-size: 17px
+    line-height: 18px
+    height: 50px
+
+  .nav-section
+    margin: 15px 0px
+    span
+      color: #555
+
+  .nav-content
+    ul ul li, ul ul li a
+      width: $nav-primary-width - ($nav-primary-content-padding * 2)
+    ul li a i
+      padding-right: $nav-hover-selected-border-radius
+    ul ul li:hover, ul ul li a:hover
+      background-color: #222
+      border-radius: $nav-hover-selected-border-radius
+      color: #ddd
+      span
+        text-decoration: underline
+    ul ul li.active, ul ul li.selected
+      background: #333
+      border-radius: $nav-hover-selected-border-radius
+      a
+        color: #bbb
+        font-weight: bold
+        i
+          color: #ddd
+    ul ul li.active:hover, ul ul li.active a:hover, ul ul li.selected:hover, ul ul li.selected a:hover
+      background: #333
+      border-radius: $nav-hover-selected-border-radius
+      color: #ddd
+      cursor: default
+      i
+        color: #ddd
+      span
+        text-decoration: none
+    ul ul li.feature-link, ul ul li.feature-link:hover, ul ul li.feature-link a:hover
+      background-color: transparent !important
+
+    ul.nav-pubnub-apps
+      li.app
+        a i:before
+          content: "\f0c2"
+        a
+          color: #999
+        a + i
+          position: absolute
+          left: $nav-primary-width - ($nav-primary-content-padding * 2) - 25px
+          top: 0px
+          line-height: 37px
+          z-index: 900
+          font-size: 16px
+          cursor: pointer
+          color: #666
+          display: none
+        a + i:hover // right side gear icon
+          color: #9f0000
+          display: none
+      li.active, li.selected
+        a i:before
+          content: "\f0c2"  // cloud > "\f0c2"  bullseye > "\f140"
+          color: #6b6
+        a i
+          color: #6b6
+        a
+          color: #ddd
+        a + i
+          color: #666
+          display: block
+        a + i:hover
+          color: #9f0000
+          display: block
+
+
+    ul.nav-pubnub-keys
+      li.keys
+        a i:before
+          content: "\f084"
+        a
+          color: #999
+        a + i
+          position: absolute
+          left: $nav-primary-width - ($nav-primary-content-padding * 2) - 25px
+          top: 0px
+          line-height: 37px
+          z-index: 900
+          font-size: 16px
+          cursor: pointer
+          color: #666
+        a + i:hover // right side gear icon
+          color: #fff
+      li.connected
+        a i:before
+          color: #6b6
+      li.active, li.selected
+        a i:before
+          color: #6b6
+        a i
+          color: #6b6
+        a
+          color: #ddd
+        a + i
+          color: #666
+        a + i:hover
+          color: #fff
+
+    ul.nav-pubnub-channels
+      .channel
+        a
+          color: #ddd
+          font-size: 11px
+        a i:before
+          content: "\f10c"
+          color: #6b6
+      .subscribed a i:before
+        content: "\f192"
+        color: #ccc
+      .subscribed a
+        color: #ccc
+      .unsubscribed a i:before
+        color: #555
+      .unsubscribed a
+        color: #555
+      .watching
+        background: #222
+        border-radius: $nav-hover-selected-border-radius
+        a
+          color: #fff
+          font-weight: bold
+        a i
+          position: relative
+        a i:before
+          content: "\f18e"
+          color: #6b6
+

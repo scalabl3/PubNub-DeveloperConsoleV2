@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+
+    <title> PubNub Developer Console </title>
+    <meta name="description" content="PubNub Developer Console">
+    <meta name="author" content="Jasdeep Jaitla (@scalabl3)">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- FAVICONS -->
+    <link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="img/favicon/favicon.ico" type="image/x-icon">
+
+    <!-- GOOGLE FONT -->
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+
+    <!-- Specifying a Webpage Icon for Web Clip
+         Ref: https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->
+    <link rel="apple-touch-icon" href="img/splash/sptouch-icon-iphone.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="img/splash/touch-icon-ipad.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="img/splash/touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="img/splash/touch-icon-ipad-retina.png">
+
+    <!-- iOS web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Startup image for web apps -->
+    <link rel="apple-touch-startup-image" href="img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
+    <link rel="apple-touch-startup-image" href="img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
+    <link rel="apple-touch-startup-image" href="img/splash/iphone.png" media="screen and (max-device-width: 320px)">
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.load.min.js"></script>
+    <script>
+        // Create a namespace for all the objects
+        window.DC = {};
+        var DC = window.DC;
+    </script>
+    <script src="devconsole_js.js"></script>
+</head>
+<body style="display: none;">
+
+<nav id="nav-primary">
+    <header class="nav-header">
+        <div class="navbar-header">
+            <a class="navbar-brand"><i id="nav-primary-toggle2" class="fa fa-arrow-circle-left"></i></a><span class="nav-main-title">Console Configuration</span>
+        </div>
+    </header>
+    <div class="nav-content">
+        <ul class="nav">
+            <div class="nav-section"><span class="nav-section-title">PUBNUB APPS</span></div>
+            <ul id="nav-pubnub-app-list" class="nav nav-pubnub-apps"></ul>
+
+            <div class="nav-section"><span class="nav-section-title">APP KEYS<!-- [<span class="nav-selected-app-name">DEMO</span>]--></span></div>
+            <ul id="nav-pubnub-keys-list" class="nav nav-pubnub-keys"></ul>
+
+            <div class="nav-section"><span class="nav-section-title">CHANNELS</span></div>
+            <div class="nav-link"><a id="link-view-all-channels" href="#" class="hidden"><i class="fa fa-list-alt"></i> <span>View Channel List</span></a></div>
+            <ul id="nav-pubnub-channel-list" class="nav nav-pubnub-channels"></ul>
+        </ul>
+    </div>
+    <footer class="nav-footer">
+
+    </footer>
+</nav>
+<div id="flow-header">
+    <nav class="navbar navbar-pubnub">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button id="nav-primary-toggle" type="button" class="navbar-toggle show navbar-left nav-menu-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="title navbar-left" href="#" style="white-space: nowrap">
+                    <span id="header-dc-title" class="app-title hidden-xs">PubNub Developer Console</span>
+                    <span id="header-app-name" class="view-pnapp hidden-xs"></span><span id="header-keys-name" class="view-pnkey hidden-xs"></span><span id="header-channel-name" class="view-pnchannel"></span>
+                </a>
+                <button id="pubnub-login" class="btn btn-default navbar-btn navbar-right" data-toggle="modal" data-target="#modal-pubnub-login">Login</button>
+                <button id="pubnub-logout" class="btn btn-default navbar-btn navbar-right hidden">Logout</button>
+            </div>
+        </div>
+    </nav>
+</div>
+<div id="content-flow">
+    <div id="data-panel">
+        <div id="panel-full-channel-list">
+            <div class="panel-toolbar">
+                <div class="panel-toolbar-title">Channel List</div>
+            </div>
+            <div class="data-list">
+                <table class="table table-striped" id="full-channel-list" ></table>
+            </div>
+        </div>
+        <div id="panel-stream-message-data">
+            <div class="form-message-data-search">
+                <input type="text" class="form-control" id="message-search" placeholder="Full Text Search in Message Data">
+            </div>
+            <div class="panel-toolbar">
+                <div class="panel-toolbar-title">Data Stream</div>
+            </div>
+            <ul id="pubnub-message-list" class="data-list">
+                <!-- <li class="msg-item">
+                     <div class="msg-item-container">
+                         <div class="msg-item-info">
+                             <div class="msg-item-identity" id="test"></div>
+                         </div>
+                         <div class="msg-item-content"><pre>{
+       <span class="key">"name":</span> <span class="string">"Scalabl3"</span>,
+       <span class="key">"msg":</span> <span class="string">"What's Up Developer Console"</span>,
+       <span class="key">"uuid":</span> <span class="string">"4cb4bbc5-5af3-49a7-b0f7-17c9140378ba"</span>,
+       <span class="key">"favorite_colors":</span> [
+         <span class="string">"red"</span>,
+         <span class="string">"green"</span>,
+         <span class="string">"blue"</span>
+       ],
+       <span class="key">"preferences":</span> {
+         <span class="key">"tablet":</span> <span class="string">"iPad"</span>,
+         <span class="key">"phone":</span> <span class="string">"iPhone"</span>,
+         <span class="key">"papertowels":</span> <span class="string">"Viva"</span>,
+         <span class="key">"foods":</span> {
+           <span class="key">"sub":</span> <span class="string">"Philly Cheesesteak"</span>,
+           <span class="key">"fruit":</span> <span class="string">"Pineapple"</span>,
+           <span class="key">"cheese":</span> <span class="string">"Cheddar"</span>
+         }
+       }
+     }</pre>                 </div>
+                     </div>
+                 </li>
+                 <li class="msg-item">
+                     <div class="msg-item-container">
+
+
+                         <div class="msg-item-info">
+                             <div class="msg-item-identity">14052754671200724</div>
+                         </div>
+                         <div class="msg-item-content"><pre>{
+       <span class="key">"name":</span> <span class="string">"Scalabl3"</span>,
+       <span class="key">"msg":</span> <span class="string">"What's Up Developer Console"</span>,
+       <span class="key">"uuid":</span> <span class="string">"4cb4bbc5-5af3-49a7-b0f7-17c9140378ba"</span>,
+       <span class="key">"favorite_colors":</span> [
+         <span class="string">"red"</span>,
+         <span class="string">"green"</span>,
+         <span class="string">"blue"</span>
+       ],
+       <span class="key">"preferences":</span> {
+         <span class="key">"tablet":</span> <span class="string">"iPad"</span>,
+         <span class="key">"phone":</span> <span class="string">"iPhone"</span>,
+         <span class="key">"papertowels":</span> <span class="string">"Viva"</span>,
+         <span class="key">"foods":</span> {
+           <span class="key">"sub":</span> <span class="string">"Philly Cheesesteak"</span>,
+           <span class="key">"fruit":</span> <span class="string">"Pineapple"</span>,
+           <span class="key">"cheese":</span> <span class="string">"Cheddar"</span>
+         }
+       }
+     }</pre></div>
+                     </div>
+                 </li>
+                 <li class="msg-item">
+                     <div class="msg-item-container">
+
+
+                         <div class="msg-item-info">
+                             <div class="msg-item-identity">14052754671200724</div>
+                         </div>
+                         <div class="msg-item-content"><pre>{
+       <span class="key">"name":</span> <span class="string">"Scalabl3"</span>,
+       <span class="key">"msg":</span> <span class="string">"What's Up Developer Console"</span>,
+       <span class="key">"uuid":</span> <span class="string">"4cb4bbc5-5af3-49a7-b0f7-17c9140378ba"</span>,
+       <span class="key">"favorite_colors":</span> [
+         <span class="string">"red"</span>,
+         <span class="string">"green"</span>,
+         <span class="string">"blue"</span>
+       ],
+       <span class="key">"preferences":</span> {
+         <span class="key">"tablet":</span> <span class="string">"iPad"</span>,
+         <span class="key">"phone":</span> <span class="string">"iPhone"</span>,
+         <span class="key">"papertowels":</span> <span class="string">"Viva"</span>,
+         <span class="key">"foods":</span> {
+           <span class="key">"sub":</span> <span class="string">"Philly Cheesesteak"</span>,
+           <span class="key">"fruit":</span> <span class="string">"Pineapple"</span>,
+           <span class="key">"cheese":</span> <span class="string">"Cheddar"</span>
+         }
+       }
+     }</pre></div>
+                     </div>
+                 </li>
+                 <li class="msg-item">
+                     <div class="msg-item-container">
+
+
+                         <div class="msg-item-info">
+                             <div class="msg-item-identity">14052754671200724</div>
+                         </div>
+                         <div class="msg-item-content"><pre>{
+       <span class="key">"name":</span> <span class="string">"Scalabl3"</span>,
+       <span class="key">"msg":</span> <span class="string">"What's Up Developer Console"</span>,
+       <span class="key">"uuid":</span> <span class="string">"4cb4bbc5-5af3-49a7-b0f7-17c9140378ba"</span>,
+       <span class="key">"favorite_colors":</span> [
+         <span class="string">"red"</span>,
+         <span class="string">"green"</span>,
+         <span class="string">"blue"</span>
+       ],
+       <span class="key">"preferences":</span> {
+         <span class="key">"tablet":</span> <span class="string">"iPad"</span>,
+         <span class="key">"phone":</span> <span class="string">"iPhone"</span>,
+         <span class="key">"papertowels":</span> <span class="string">"Viva"</span>,
+         <span class="key">"foods":</span> {
+           <span class="key">"sub":</span> <span class="string">"Philly Cheesesteak"</span>,
+           <span class="key">"fruit":</span> <span class="string">"Pineapple"</span>,
+           <span class="key">"cheese":</span> <span class="string">"Cheddar"</span>
+         }
+       }
+     }</pre></div>
+                     </div>
+                 </li>-->
+            </ul>
+        </div>
+    </div>
+    <div id="presence-panel" class="hidden-xs">
+        <div id="stream-presence-data">
+            <div class="panel-toolbar">
+                <div class="panel-toolbar-content">
+                    <div class="panel-toolbar-title">Presence</div>
+                    <div id="panel-presence-occupants"><div class="bubble">&nbsp;</div></div>
+                </div>
+            </div>
+            <ul id="pubnub-presence-list" class="data-list">
+                <!--<li class="presence-item-container">
+                    <div class="presence-item-info clearfix">
+                        <div class="presence-item-identity" id="test2"></div>
+                    </div>
+                    <div class="presence-item-content clearfix">
+                        <div class="presence-occupants">-7 [2]</div>
+                        <div class="presence-uuids"><pre><span class="string">"3a13460b-5761-4ac7-ab6c-99d543566faf"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span>
+    </pre></div>
+                    </div>
+                </li>
+                <li class="presence-item-container">
+                    <div class="presence-item-info clearfix">
+                        <div class="presence-item-identity">Sun Oct 16, 2011 09:17:56.721</div>
+                    </div>
+                    <div class="presence-item-content clearfix">
+                        <div class="presence-occupants">+7 [9]</div>
+                        <div class="presence-uuids"><pre><span class="string">"3a13460b-5761-4ac7-ab6c-99d543566faf"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span>
+    </pre></div>
+                    </div>
+                </li>
+                <li class="presence-item-container">
+                    <div class="presence-item-info clearfix">
+                        <div class="presence-item-identity">Sun Oct 16, 2011 09:17:56.721</div>
+                    </div>
+                    <div class="presence-item-content clearfix">
+                        <div class="presence-occupants">-2 [2]</div>
+                        <div class="presence-uuids"><pre><span class="string">"3a13460b-5761-4ac7-ab6c-99d543566faf"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span></pre></div>
+                    </div>
+                </li>
+                <li class="presence-item-container">
+                    <div class="presence-item-info clearfix">
+                        <div class="presence-item-identity">Sun Oct 16, 2011 09:17:56.721</div>
+                    </div>
+                    <div class="presence-item-content clearfix">
+                        <div class="presence-occupants">+2 [4]</div>
+                        <div class="presence-uuids"><pre><span class="string">"3a13460b-5761-4ac7-ab6c-99d543566faf"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span></pre></div>
+                    </div>
+                </li>
+                <li class="presence-item-container">
+                    <div class="presence-item-info clearfix">
+                        <div class="presence-item-identity">Sun Oct 16, 2011 09:17:56.721</div>
+                    </div>
+                    <div class="presence-item-content clearfix">
+                        <div class="presence-occupants">-2 [2]</div>
+                        <div class="presence-uuids"><pre><span class="string">"3a13460b-5761-4ac7-ab6c-99d543566faf"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span></pre></div>
+                    </div>
+                </li>
+                <li class="presence-item-container">
+                    <div class="presence-item-info clearfix">
+                        <div class="presence-item-identity">Sun Oct 16, 2011 09:17:56.721</div>
+                    </div>
+                    <div class="presence-item-content clearfix">
+                        <div class="presence-occupants">+2 [4]</div>
+                        <div class="presence-uuids"><pre><span class="string">"3a13460b-5761-4ac7-ab6c-99d543566faf"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span></pre></div>
+                    </div>
+                </li>
+                <li class="presence-item-container">
+                    <div class="presence-item-info clearfix">
+                        <div class="presence-item-identity">Sun Oct 16, 2011 09:17:56.721</div>
+                    </div>
+                    <div class="presence-item-content clearfix">
+                        <div class="presence-occupants">=2 [2]</div>
+                        <div class="presence-uuids"><pre><span class="string">"3a13460b-5761-4ac7-ab6c-99d543566faf"</span>,
+    <span class="string">"6d82400d-1d16-4ea9-88cb-520e66c78909"</span></pre></div>
+                    </div>
+                </li>-->
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal-pubnub-login" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Login to your PubNub Account</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <label class="control-label" for="email"> Email</label>
+                        <input type="text" id="email" class="form-control" required />
+                        <span class="hidden glyphicon glyphicon-remove form-control-feedback"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="password"> Password</label>
+                        <input type="password" id="password" class="form-control" required />
+                        <span class="hidden glyphicon glyphicon-remove form-control-feedback"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"> Remember me
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button id="btn-login-action" type="button" class="btn btn-primary">
+                    Login
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- JS TOUCH : include this plugin for mobile drag / drop touch events
+<script src="js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> -->
+
+<!--[if IE 8]>
+
+<h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+
+<![endif]-->
+
+</body>
+</html>

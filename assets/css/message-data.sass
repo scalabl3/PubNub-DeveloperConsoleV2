@@ -1,0 +1,68 @@
+#panel-stream-message-data
+  ul.data-list
+    li
+      font-size: 10px
+      menu
+        font-size: 10px
+      a
+        font-size: 10px
+      div.identity
+        font-size: 10px
+      div.content
+        font-size: 10px
+
+  .msg-item-container
+    padding: 10px
+    border-bottom: 1px solid #eee
+    -webkit-transition: all 0.5s linear
+    -moz-transition: all 0.5s linear
+    -o-transition: all 0.5s linear
+    transition: all 0.5s linear
+
+  .msg-item-container:hover
+    background-color: #555
+    opacity: 1
+    border-color: #66AFE9
+    outline: 0
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(102, 175, 233, 0.6)
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(102, 175, 233, 0.6)
+    .msg-item-identity
+      color: #eee
+    .msg-item-content
+      opacity: 1
+
+  .msg-item-info
+
+    .msg-item-identity
+      font-family: Menlo, 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Consolas, monospace
+      font-size: 12px
+      color: #ddd
+      float: right
+      white-space: nowrap
+
+  .msg-item-content
+    opacity: 0.75
+    pre
+      outline: 0.5px solid #ccc
+      padding: 10px 20px
+      margin: 5px
+      font-family: Menlo, 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Consolas, monospace
+      font-size: 11px
+      line-height: 1.5
+      margin: 25px
+
+    .string
+      color: #008000
+
+    .number
+      color: #0000ff
+
+    .boolean
+      color: #b22222
+
+    .null
+      color: #808080
+
+    .key
+      color: #333
+      font-weight: bold

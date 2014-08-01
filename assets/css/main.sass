@@ -1,0 +1,244 @@
+$header-height: 50px
+$nav-primary-width: 250px           // also specified in nav-primary.sass (make sure they are same)
+$nav-primary-content-padding: 10px  // also specified in nav-primary.sass (make sure they are same)
+$nav-background: #171D1F            // also specified in nav-primary.sass (make sure they are same)
+$form-message-search-height: 48px
+$panel-toolbar-height: 30px
+
+$shadow-blur: 8px
+$shadow-blur-left: 12px
+$shadow-spread: 2px
+
+$shadow-length-bot: 0px
+$shadow-length-lft: -3px
+
+$header-shadow-bottom-color: rgba(0,0,0,0.0)
+$content-flow-shadow-left-color: rgba(0,0,0,0.25)
+
+$z-flow-header: 1033
+$z-data-panel: 1032
+$z-content-flow: 1031
+$z-nav: 1030
+
+@import "media-queries"
+
+html, body
+  height: 100%
+  width: 100%
+  overflow: hidden
+  background-color: black
+  color: #222
+
+.navbar-header
+  width: 100%
+
+#nav-primary.contract
+  margin-left: 0px - $nav-primary-width
+  +mobile-landscape-and-below
+    margin-left: 0px
+
+#nav-primary
+  -moz-user-select: none
+  overflow: visible
+  position: relative
+  z-index: 1030
+  float: left
+  height: 100%
+  width: $nav-primary-width
+  padding: 0px
+  background: none repeat scroll 0% 0% $nav-background
+  -webkit-transition: margin-left 0.5s, -webkit-transform 0.5s
+  transition: margin-left 0.5s, transform 0.5s
+  transition-timing-function: ease
+  +mobile-landscape-and-below
+    margin-left: 0px - $nav-primary-width
+
+
+  header.nav-header
+    box-sizing: content-box
+    height: $header-height
+    margin: 0px
+    padding: 0px
+    //border-bottom: 1px solid #30393B
+    width: $nav-primary-width
+    background-color: #111
+  footer.nav-footer
+
+  div.nav-content
+    //border-top: 1px solid #30393B
+    padding: 10px
+
+
+#flow-header.expand
+  left: 0px
+  +mobile-landscape-and-below
+    left: $nav-primary-width
+
+#flow-header
+  box-sizing: content-box
+  position: absolute
+  top: 0px
+  left: $nav-primary-width
+  right: 0px
+  z-index: $z-flow-header
+  height: $header-height
+  min-width: $nav-primary-width
+  background-color: #F9F9F9
+  border-bottom: none
+  list-style: none outside none
+  white-space: nowrap
+  -webkit-transition: left 0.5s
+  transition: left 0.5s
+  transition-timing-function: ease
+  +mobile-landscape-and-below
+    left: 0
+
+
+
+  // left shadow
+  -webkit-box-shadow: $shadow-length-lft 0px $shadow-blur-left $shadow-spread $content-flow-shadow-left-color
+  -moz-box-shadow: $shadow-length-lft 0px $shadow-blur-left $shadow-spread $content-flow-shadow-left-color
+  box-shadow: $shadow-length-lft 0px $shadow-blur-left $shadow-spread $content-flow-shadow-left-color
+
+  // bottom shadow
+  -webkit-box-shadow: 0px $shadow-length-bot $shadow-blur $shadow-spread $header-shadow-bottom-color
+  -moz-box-shadow: 0px $shadow-length-bot $shadow-blur $shadow-spread $header-shadow-bottom-color
+  box-shadow: 0px $shadow-length-bot $shadow-blur $shadow-spread $header-shadow-bottom-color
+
+  nav
+    height: $header-height
+
+  .navbar-pubnub
+
+    background-color: darken(#CE1126, 10%)
+    border-radius: 0px
+
+    a.title
+      color: #fff
+      float: left
+      padding: 16px 13px
+      font-size: 17px
+      line-height: 18px
+      height: 50px
+      +mobile-landscape-and-below
+        font-size: 12px
+
+  .nav-menu-toggle
+    background-color: none
+    border-color: none
+    span
+      background-color: #aaa
+      +mobile-landscape-and-below
+        font-size: 12px
+
+
+#content-flow
+  height: 100%
+  position: relative
+  background-color: #fff
+  overflow: hidden
+  z-index: $z-content-flow
+
+
+  // left shadow
+  -webkit-box-shadow: $shadow-length-lft 0px $shadow-blur-left $shadow-spread $content-flow-shadow-left-color
+  -moz-box-shadow: $shadow-length-lft 0px $shadow-blur-left $shadow-spread $content-flow-shadow-left-color
+  box-shadow: $shadow-length-lft 0px $shadow-blur-left $shadow-spread $content-flow-shadow-left-color
+
+  .panel-toolbar
+    padding: 0.731rem
+    width: 100%
+    position: absolute
+    z-index: 11
+    top: $header-height
+    height: $panel-toolbar-height
+    margin: 0px
+    background: none repeat scroll 0% 0% #eee
+    border-bottom: 1px solid #C0C0C0
+
+    .panel-toolbar-title
+      float: left
+      font-weight: bold
+
+    #panel-presence-occupants
+      float: right
+      .bubble
+        padding: 1px 2px 1px 2px
+        background-color: #aaa
+        color: white
+        font-weight: bold
+        font-size: 10px
+        border-radius: 20px
+        width: 30px
+        text-align: center
+        float: right
+        margin-top: 0.5px
+
+
+  #data-panel, #presence-panel
+    position: relative
+    height: 100%
+    display: block
+
+
+  #data-panel
+    width: 61.8%
+    //background-color: #ffe
+    float: left
+    z-index: $z-data-panel
+    white-space: nowrap
+    min-width: $nav-primary-width
+    +tablet-portrait-and-below
+      width: 100%
+
+    .form-message-data-search
+      padding: 0.731rem
+      width: 100%
+      position: absolute
+      z-index: 11
+      bottom: 0px
+      margin: 0px
+      background: none repeat scroll 0% 0% #aaa
+      border-bottom: 1px solid #C0C0C0
+      height: $form-message-search-height
+
+      .form-group, .form-control
+        width: 100%
+
+      .form-control
+        border-radius: 4px
+
+
+  #presence-panel
+    //background-color: #fef
+    width: 38.2%
+    border-left: 1px solid #C0C0C0
+    float: right
+    +tablet-portrait-and-below
+      display: none
+      width: 100%
+
+  #stream-message-data, #stream-presence-data, #panel-full-channel-list
+    height: 100%
+    position: relative
+    box-sizing: border-box
+
+  #panel-full-channel-list
+    display: none
+
+  .data-list
+    position: absolute
+    left: 0px
+    right: 0px
+    bottom: 0px
+    margin: 0px
+    padding: 0px
+    overflow-x: hidden
+    overflow-y: scroll
+    transition: opacity 50ms linear 0s
+    top: $header-height + $panel-toolbar-height
+
+#stream-message-data
+  .data-list
+    bottom: $panel-toolbar-height
+
