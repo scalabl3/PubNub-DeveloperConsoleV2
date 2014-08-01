@@ -85,9 +85,11 @@ var Keys = Backbone.Model.extend({
 
         // Add Channel to ChannelList
         var channels = this.get("channels");
-        channels.add({name: name});
-        this.set("channels", channels);
-
+        var add = this.attributes.channels.findWhere({name: name});
+        if (!add) {
+            channels.add({name: name});
+            this.set("channels", channels);
+        }
         if (subscribe) {
             this.subscribe_channel(name);
         }

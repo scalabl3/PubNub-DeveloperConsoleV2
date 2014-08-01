@@ -165,7 +165,7 @@ html, body {
       #content-flow #presence-panel {
         display: none;
         width: 100%; } }
-  #content-flow #stream-message-data, #content-flow #stream-presence-data, #content-flow #panel-full-channel-list {
+  #content-flow #panel-stream-message-data, #content-flow #stream-presence-data, #content-flow #panel-full-channel-list {
     height: 100%;
     position: relative;
     box-sizing: border-box; }
@@ -183,5 +183,5 @@ html, body {
     transition: opacity 50ms linear 0s;
     top: 80px; }
 
-#stream-message-data .data-list {
+#panel-stream-message-data .data-list {
   bottom: 30px; }
