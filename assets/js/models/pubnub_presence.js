@@ -66,10 +66,13 @@ var PresenceView = Backbone.View.extend({
         this.compiledTemplate = Handlebars.compile(this.rawTemplate);
     },
     render: function() {
-        if (this.model.get("uuid")) {
+        if (this.model.get("uuid") !== null) {
             var attributes = this.model.toJSON();
             this.$el.html(this.compiledTemplate(attributes));
             this.model.set("rendered", true);
+        }
+        else {
+            this.$el.hide();
         }
     }
 });

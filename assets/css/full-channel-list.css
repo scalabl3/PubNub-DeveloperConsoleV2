@@ -1,0 +1,8 @@
+table#full-channel-list tr.channel-list-item {
+  cursor: pointer; }
+table#full-channel-list tr.channel-list-item:last-of-type td {
+  border-bottom: 2px solid #dddddd; }
+table#full-channel-list tr.selected td {
+  font-weight: bold; }
+table#full-channel-list tr.channel-list-item:hover {
+  background: #eeeeff; }

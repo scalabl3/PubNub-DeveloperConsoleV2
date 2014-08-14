@@ -23,10 +23,12 @@ var FullChannelItemView = Backbone.View.extend({
         this.compiledTemplate = Handlebars.compile(this.rawTemplate);
     },
     render: function() {
-        //console.log("AppView render");
-        var attributes = this.model.toJSON();
-        //var compiledTemplate = Handlebars.compile(this.rawTemplate);
-        this.$el.html(this.compiledTemplate(attributes));
+        if (this.model.get("name") !== null) {
+            //console.log("AppView render");
+            var attributes = this.model.toJSON();
+            //var compiledTemplate = Handlebars.compile(this.rawTemplate);
+            this.$el.html(this.compiledTemplate(attributes));
+        }
     }
 });
 
@@ -43,8 +45,12 @@ var FullChannelList = Backbone.Collection.extend({
     totalOccupancy: null,
     retrieve_channels: function(subscribeKey) {
 
-        this.set("subscribeKey", subscribeKey);
-        var url_global_here_now = "http://pubsub.pubnub.com/v2/presence/sub-key/" + subscribeKey + "?disable_uuids=1";
+        if (subscribeKey) {
+            this.subscribeKey = subscribeKey;
+            this.reset();
+        }
+
+        var url_global_here_now = "http://pubsub.pubnub.com/v2/presence/sub-key/" + this.subscribeKey + "?disable_uuids=1";
 
         var clist = this;
 
@@ -54,16 +60,25 @@ var FullChannelList = Backbone.Collection.extend({
         }).done(function( data ) {
 
             if (data.payload.channels) {
-                console.log("PN: retrieved full channel list");
+                console.log("PN: retrieved full subscribed channel list");
                 //console.log(data.payload);
 
-                clist.set("totalChannels", data.payload.total_channels);
-                clist.set("totalOccupancy", data.payload.total_occupancy);
-                clist.set("channels", data.payload.channels);
-                clist.set("filtered", data.payload.channels);
+                clist.totalChannels =  data.payload.total_channels;
+                clist.totalOccupancy =  data.payload.total_occupancy;
+                clist.channels =  data.payload.channels;
+                clist.filtered =  data.payload.channels;
 
                 $.each(data.payload.channels, function (c, v) {
-                    clist.add(new FullChannelListItem({ name: c, occupants: v.occupancy }))
+
+                    var ch = clist.findWhere({name: c});
+
+                    // If channel listed already, update occupants only, otherwise add it to list
+                    if (ch) {
+                        ch.set("occupants", v.occupancy);
+                    }
+                    else {
+                        clist.add(new FullChannelListItem({ name: c, occupants: v.occupancy }))
+                    }
                 });
             }
         });

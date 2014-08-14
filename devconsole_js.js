@@ -49,9 +49,12 @@ head.load({js_consolelog: "assets/js/console_logging.js"}, function () {
 
                 head.load([
                     { js_bbcollectionView: "//cdnjs.cloudflare.com/ajax/libs/backbone.collectionView/0.10.1/backbone.collectionView.min.js"},
-                    { js_marionette: "//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.0.3/backbone.marionette.min.js"}
+                    { js_marionette: "//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.0.3/backbone.marionette.min.js"},
+                    { js_bblocalstore: "//cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.1.9/backbone.localStorage.js"}
                 ], function() {
-                    jslog.gw("Backbone Collection View 0.10.1, Marionette 2.0.3 loaded ");
+                    jslog.gw("Backbone Collection View 0.10.1 loaded");
+                    jslog.gw("Marionette 2.0.3 loaded");
+                    jslog.gw("Backbone LocalStorage 1.1.9 loaded");
                 });
             });
 

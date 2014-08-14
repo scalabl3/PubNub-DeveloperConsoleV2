@@ -57,12 +57,19 @@ $(document).ready(function(){
         pubnubAppListView.reset();
         pubnubAppList.reset();
 
+        DC.user.sync("delete", DC.user);
         DC.user = null;
         console.log("PUBNUB: account - logout successful");
 
         $("#pubnub-logout").addClass("hidden");
         $("#pubnub-login").removeClass("hidden");
     });
+
+    $("#btn-unseen").click(function(e){
+        e.preventDefault();
+        DC.scrollToBottom();
+    });
+
     $("#btn-login-action").click(function(e){
 
         // login state (prevents double clicks, multiple logins)
@@ -70,28 +77,25 @@ $(document).ready(function(){
             DC.loggingIn = true;
 
 
-            var btn = $("#btn-login");
+            var btn = $("#btn-login-action");
 
             if ($("#email").val() !== "") {
 
                 if ($("#password").val() !== "") {
 
-                    DC.user = new User();
+                    DC.user = new User({ id: 1 });
                     btn.prop("disabled", true);
-                    DC.addDemoAccount();
                     DC.user.retrieve_account({
                         email: $("#email").val(),
                         password: $("#password").val(),
                         success: function(){
-                            $('#modal-pubnub-login').modal('hide');
-                            $("#pubnub-login").addClass("hidden");
-                            $("#pubnub-logout").removeClass("hidden");
-                            btn.prop("disabled", false);
+                            DC.setLoggedIn();
 
-                            // enable login button after 1 second (prevents double clicks, multiple logins)
-                            setTimeout(function(){
-                                DC.loggingIn = false;
-                            }, 1000);
+                            if ($("#remember").prop('checked')) {
+                                // Store the appropriate info here
+                                console.log(DC.user.get("token"));
+                                DC.user.save();
+                            }
 
                         },
                         error: function() {
@@ -110,11 +114,6 @@ $(document).ready(function(){
         }
     });
 
-    $("#link-view-all-channels").click(function(e){
-        e.preventDefault();
-        DC.activateFullChannelList();
-        pubnubFullChannelListView.assign_collection(pubnubFullChannelList);
-    });
 
     //console.log(CryptoJS.MD5("jasdeep@scalabl3.com").toString());
 
@@ -127,6 +126,7 @@ $(document).ready(function(){
     DC.checkScroll = function() {
         DC.dataPanel = $("#pubnub-message-list");
         DC.isScrolledToBottom = DC.dataPanel.prop('scrollHeight') - DC.dataPanel.height() <= DC.dataPanel.scrollTop() + DC.scrollOffset;
+        //console.log(DC.isWatchingMessage);
     };
     DC.autoScroll = function() {
         // allow 1px inaccuracy by adding 1
@@ -137,12 +137,23 @@ $(document).ready(function(){
             //DC.dataPanel.animate({scrollTop: (DC.dataPanel.prop('scrollHeight') - DC.dataPanel.height()) }, 100);
             DC.dataPanel.scrollTop((DC.dataPanel.prop('scrollHeight') - DC.dataPanel.height()));
             DC.unseenMessages = 0;
+            $("#btn-unseen span").text(DC.unseenMessages);
+            $("#btn-unseen").addClass("hidden");
             DC.seenMessages = $("#pubnub-message-list li.msg-item").size();
         }
         else {
             DC.unseenMessages = $("#pubnub-message-list li.msg-item").size() - DC.seenMessages;
-            console.log("unseen messages: " + DC.unseenMessages.toString());
+            $("#btn-unseen span").text(DC.unseenMessages);
+            $("#btn-unseen").removeClass("hidden");
+            //console.log("unseen messages: " + DC.unseenMessages.toString());
         }
+    };
+    DC.scrollToBottom = function() {
+        DC.dataPanel.scrollTop((DC.dataPanel.prop('scrollHeight') - DC.dataPanel.height()));
+        DC.unseenMessages = 0;
+        $("#btn-unseen span").text(DC.unseenMessages);
+        $("#btn-unseen").addClass("hidden");
+
     };
     DC.activateFullChannelList = function(){
         $("#panel-stream-message-data").hide();
@@ -159,5 +170,37 @@ $(document).ready(function(){
         var demoAccount = new App({ name: "Demo" });
         demoAccount.addAppKey("Demo", "demo", "demo");
         pubnubAppList.add(demoAccount);
-    }
+    };
+    DC.retrieveChannelInterval = 0;
+
+    DC.checkLocalStorage = function() {
+        DC.user = new User({ id: 1 });
+        DC.user.fetch({
+            success: function(u) {
+                console.log("PUBNUB: account - found in local storage, logout enabled");
+                DC.setLoggedIn();
+                DC.addDemoAccount();
+                DC.user.retrieve_apps();
+                DC.user.save();
+            },
+            error: function() {
+                DC.user = null;
+                console.log("PUBNUB: account - not in local storage, login enabled");
+            }
+        });
+    };
+    DC.setLoggedIn = function() {
+
+        // enable login button after 1 second (prevents double clicks, multiple logins)
+        setTimeout(function(){
+            DC.loggingIn = false;
+        }, 1000);
+
+        $("#btn-login-action").prop("disabled", false);
+        $('#modal-pubnub-login').modal('hide');
+        $("#pubnub-login").addClass("hidden");
+        $("#pubnub-logout").removeClass("hidden");
+    };
+
+    DC.checkLocalStorage();
 });

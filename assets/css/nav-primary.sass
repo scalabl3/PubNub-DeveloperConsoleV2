@@ -43,6 +43,8 @@ $nav-hover-selected-border-radius: 9px
         font-weight: bold
         i
           color: #ddd
+      a.nav-link
+        color: #3aa
     ul ul li.active:hover, ul ul li.active a:hover, ul ul li.selected:hover, ul ul li.selected a:hover
       background: #333
       border-radius: $nav-hover-selected-border-radius
@@ -52,6 +54,8 @@ $nav-hover-selected-border-radius: 9px
         color: #ddd
       span
         text-decoration: none
+    ul ul li.nav-link a:hover
+      color: #428BCA
     ul ul li.feature-link, ul ul li.feature-link:hover, ul ul li.feature-link a:hover
       background-color: transparent !important
 
@@ -123,6 +127,13 @@ $nav-hover-selected-border-radius: 9px
           color: #fff
 
     ul.nav-pubnub-channels
+      .nav-link
+        a
+          color: #428BCA
+          font-size: 11px
+      li.nav-link
+        .selected
+          color: #428BCA
       .channel
         a
           color: #ddd

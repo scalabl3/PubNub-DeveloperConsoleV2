@@ -39,10 +39,11 @@ var Channel = Backbone.Model.extend({
         subscribed: false,
         watching: false,
         messageCount: 0,
-        occupancy: 0,
+        occupants: 0,
         messages: null,
         presence: null,
-        rendered: false
+        rendered: false,
+        isViewChannels: false       // Special first item in collection used for viewing all channels (global_here_now)
     },
     initialize: function() {
         var mlist = new MessageList({
@@ -95,8 +96,11 @@ var Channel = Backbone.Model.extend({
     },
     receive_presence: function(message) {
         if (message.uuid != null && typeof message.uuid != 'undefined') {
+            //console.log(message);
             var plist = this.get("presence");
-            plist.unshift({ timestamp: message.timestamp, uuid: message.uuid, action: message.action, occupants: message.occupancy });
+            var p = new Presence({ timestamp: message.timestamp, uuid: message.uuid, action: message.action, occupants: message.occupancy });
+            //console.log(p);
+            plist.unshift(p);
 
             // To Conserve Browser memory (if you leave the console open), max out number of messages that will be shown in window
             if (plist.length > DC.maxMessages) {
@@ -106,7 +110,7 @@ var Channel = Backbone.Model.extend({
             DC.updatePanelHeaderPresence(message.occupancy);
 
             this.set("presence", plist);
-            this.set("occupancy", message.occupancy);
+            this.set("occupants", message.occupancy);
         }
     }
 });
@@ -120,6 +124,7 @@ var ChannelView = Backbone.View.extend({
     tagName: 'li',
     className: 'channel',
     rawTemplate: '<a href="#"><i class="fa"></i> <span>{{name}}</span></a></i>',
+    viewChannels: '<a id="link-view-all-channels" href="#" class="hidden"><i class="fa fa-list-alt"></i> <span>View Channel List</span></a>',
     compiledTemplate: null,
 
     initialize: function () {
@@ -148,10 +153,18 @@ var ChannelView = Backbone.View.extend({
         }
     },
     render: function() {
-        var attributes = this.model.toJSON();
-        this.$el.html(this.compiledTemplate(attributes));
+
+        if (!this.model.get("isViewChannels")) {
+            var attributes = this.model.toJSON();
+            this.$el.html(this.compiledTemplate(attributes));
+            this.update_state();
+        }
+        else {
+            this.$el.html(this.viewChannels);
+            this.$el.addClass("nav-link");
+            this.$el.removeClass("channel");
+        }
         this.model.set("rendered", true);
-        this.update_state();
     }
 });
 

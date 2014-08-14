@@ -154,7 +154,10 @@ html, body {
       border-bottom: 1px solid silver;
       height: 48px; }
       #content-flow #data-panel .form-message-data-search .form-group, #content-flow #data-panel .form-message-data-search .form-control {
-        width: 100%; }
+        width: 50%;
+        float: left; }
+      #content-flow #data-panel .form-message-data-search button {
+        float: right; }
       #content-flow #data-panel .form-message-data-search .form-control {
         border-radius: 4px; }
   #content-flow #presence-panel {
@@ -184,4 +187,4 @@ html, body {
     top: 80px; }
 
 #panel-stream-message-data .data-list {
-  bottom: 30px; }
+  bottom: 48px; }

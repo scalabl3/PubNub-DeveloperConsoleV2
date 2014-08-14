@@ -41,7 +41,7 @@ var App = Backbone.Model.extend({
         appKeys: null
     },
     initialize: function(){
-        this.set("uuid", PUBNUB.uuid());
+        this.set("uuid", "pubnub-developer-console");
         this.set("appKeys", new KeysList());
     },
     addAppKey: function(name, pkey, skey, secretKey) {

@@ -33,6 +33,8 @@
     font-weight: bold; }
     #nav-primary .nav-content ul ul li.active a i, #nav-primary .nav-content ul ul li.selected a i {
       color: #dddddd; }
+  #nav-primary .nav-content ul ul li.active a.nav-link, #nav-primary .nav-content ul ul li.selected a.nav-link {
+    color: #33aaaa; }
 #nav-primary .nav-content ul ul li.active:hover, #nav-primary .nav-content ul ul li.active a:hover, #nav-primary .nav-content ul ul li.selected:hover, #nav-primary .nav-content ul ul li.selected a:hover {
   background: #333333;
   border-radius: 9px;
@@ -42,6 +44,8 @@
     color: #dddddd; }
   #nav-primary .nav-content ul ul li.active:hover span, #nav-primary .nav-content ul ul li.active a:hover span, #nav-primary .nav-content ul ul li.selected:hover span, #nav-primary .nav-content ul ul li.selected a:hover span {
     text-decoration: none; }
+#nav-primary .nav-content ul ul li.nav-link a:hover {
+  color: #428bca; }
 #nav-primary .nav-content ul ul li.feature-link, #nav-primary .nav-content ul ul li.feature-link:hover, #nav-primary .nav-content ul ul li.feature-link a:hover {
   background-color: transparent !important; }
 #nav-primary .nav-content ul.nav-pubnub-apps li.app a i:before {
@@ -101,6 +105,11 @@
   color: #666666; }
 #nav-primary .nav-content ul.nav-pubnub-keys li.active a + i:hover, #nav-primary .nav-content ul.nav-pubnub-keys li.selected a + i:hover {
   color: white; }
+#nav-primary .nav-content ul.nav-pubnub-channels .nav-link a {
+  color: #428bca;
+  font-size: 11px; }
+#nav-primary .nav-content ul.nav-pubnub-channels li.nav-link .selected {
+  color: #428bca; }
 #nav-primary .nav-content ul.nav-pubnub-channels .channel a {
   color: #dddddd;
   font-size: 11px; }

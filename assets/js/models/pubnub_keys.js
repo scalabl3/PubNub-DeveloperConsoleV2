@@ -46,17 +46,28 @@ var Keys = Backbone.Model.extend({
         isConnected: false,
         isActive: false,
         pubnub: null,
-        channels: null
+        channels: null,
+        enabled: false,
+        hasPresence: false,
+        hasHistory: false,
+        hasPAM: false,
+        hasMultiplex: false,
+        hasAnalytics: false,
+        hasApplePush: false
     },
     initialize: function() {
-        this.set("channels", new ChannelList());
+        var c = new ChannelList();
+        // Add Default Nav View Channel List using global_here_now as first "channel" item
+        c.add({ name: "View Channel List", isViewChannels: true });
+        this.set("channels", c);
     },
     connect: function() {
         if (!this.get("isConnected")) {
             console.log ("PN: connecting " + this.get("appName") + "::" + this.get("name"));
             this.set("pubnub", PUBNUB.init({
                 publish_key	 : this.get("pubkey"),
-                subscribe_key : this.get("subkey")
+                subscribe_key : this.get("subkey"),
+                uuid: "pubnub-developer-console"
             }));
         }
         else {
@@ -85,8 +96,8 @@ var Keys = Backbone.Model.extend({
 
         // Add Channel to ChannelList
         var channels = this.get("channels");
-        var add = this.attributes.channels.findWhere({name: name});
-        if (!add) {
+        var added = this.attributes.channels.findWhere({name: name});
+        if (!added) {
             channels.add({name: name});
             this.set("channels", channels);
         }
@@ -103,6 +114,7 @@ var Keys = Backbone.Model.extend({
         this.set("channels", channels);
     },
     subscribe_channel: function(name, completeCallback){
+        var self = this;
         var subChannel = this.attributes.channels.findWhere({name: name});
         if (subChannel) {
             if (!subChannel.get("subscribed")) {
@@ -113,10 +125,18 @@ var Keys = Backbone.Model.extend({
                         subChannel.receive_message(message, env, channel);
                     },
                     presence: function (message) {
+                        //console.log(message);
                         subChannel.receive_presence(message);
                     },
                     connect: function () {
                         subChannel.set("subscribed", true);
+                        self.attributes.pubnub.here_now({
+                            channel: subChannel.get("name"),
+                            callback: function(herenow) {
+                                console.log(herenow);
+                                //subChannel.receive_presence(message);
+                            }
+                        });
                         if (completeCallback && typeof(completeCallback) == "function") {
                             completeCallback();
                         }
@@ -135,6 +155,10 @@ var Keys = Backbone.Model.extend({
             unsubChannel.set("subscribed", false);
             unsubChannel.set("watching", false);
             unsubChannel.clear_messages();
+
+            if (completeCallback && typeof(completeCallback) == "function") {
+                completeCallback();
+            }
         }
     },
     toggle_active: function() {
