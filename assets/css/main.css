@@ -5,6 +5,21 @@ html, body {
   background-color: black;
   color: #222222; }
 
+input::-webkit-input-placeholder {
+  color: #c8c8c8 !important; }
+
+input::-moz-placeholder {
+  color: #c8c8c8 !important; }
+
+input:-moz-placeholder {
+  color: #c8c8c8 !important; }
+
+input:-ms-input-placeholder {
+  color: #c8c8c8 !important; }
+
+input:focus::-webkit-input-placeholder {
+  color: transparent !important; }
+
 .navbar-header {
   width: 100%; }
 
@@ -38,7 +53,14 @@ html, body {
     width: 250px;
     background-color: #111111; }
   #nav-primary div.nav-content {
-    padding: 10px; }
+    padding: 10px;
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    right: 0px;
+    bottom: 50px;
+    overflow-x: hidden;
+    overflow-y: scroll; }
 
 #flow-header.expand {
   left: 0px; }
@@ -153,13 +175,19 @@ html, body {
       background: none repeat scroll 0% 0% #aaaaaa;
       border-bottom: 1px solid silver;
       height: 48px; }
-      #content-flow #data-panel .form-message-data-search .form-group, #content-flow #data-panel .form-message-data-search .form-control {
-        width: 50%;
-        float: left; }
-      #content-flow #data-panel .form-message-data-search button {
-        float: right; }
-      #content-flow #data-panel .form-message-data-search .form-control {
+    #content-flow #data-panel .input-group {
+      width: 100%;
+      padding-right: 200px;
+      float: left; }
+      #content-flow #data-panel .input-group input {
+        display: inline-block; }
+      #content-flow #data-panel .input-group .form-control {
+        width: 100%;
         border-radius: 4px; }
+  #content-flow #btn-unseen {
+    margin-left: 4px; }
+  #content-flow #btn-publish {
+    margin-left: 4px; }
   #content-flow #presence-panel {
     width: 38.2%;
     border-left: 1px solid silver;
@@ -174,6 +202,10 @@ html, body {
     box-sizing: border-box; }
   #content-flow #panel-full-channel-list {
     display: none; }
+  #content-flow #panel-console-settings {
+    display: none; }
+  #content-flow #panel-history-explorer {
+    display: none; }
   #content-flow .data-list {
     position: absolute;
     left: 0px;
@@ -185,6 +217,8 @@ html, body {
     overflow-y: scroll;
     transition: opacity 50ms linear 0s;
     top: 80px; }
+  #content-flow .data-list-table {
+    height: 100%; }
 
 #panel-stream-message-data .data-list {
   bottom: 48px; }

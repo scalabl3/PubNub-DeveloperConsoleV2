@@ -16,7 +16,10 @@
   #nav-primary .nav-section span {
     color: #555555; }
 #nav-primary .nav-content ul ul li, #nav-primary .nav-content ul ul li a {
-  width: 230px; }
+  width: 230px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden; }
 #nav-primary .nav-content ul li a i {
   padding-right: 9px; }
 #nav-primary .nav-content ul ul li:hover, #nav-primary .nav-content ul ul li a:hover {

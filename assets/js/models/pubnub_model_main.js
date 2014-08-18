@@ -64,6 +64,9 @@ pubnubAppListView.on( "selectionChanged", function(newModel, oldModel) {
     if (selectedApp) {
         var klist = selectedApp.get("appKeys");
         pubnubKeysListView.assign_collection(klist);
+
+        DC.currentSelection.app = selectedApp.get("name");
+        DC.saveCurrentSelection();
     }
 
     DC.activateStreamMessageData();
@@ -164,6 +167,9 @@ pubnubKeysListView.on( "selectionChanged", function() {
 //        }, 5000);
 
         $("#link-view-all-channels").removeClass("hidden");
+
+        DC.currentSelection.keys = selectedKeys.get("name");
+        DC.saveCurrentSelection();
     }
     else {
         $("#link-view-all-channels").addClass("hidden");
@@ -278,6 +284,9 @@ pubnubChannelListView.on( "selectionChanged", function(newModel, oldModel) {
 
             DC.activateStreamMessageData();
         }
+
+        DC.currentSelection.channel = selectedChannel.get("name");
+        DC.saveCurrentSelection();
     }
 
 });

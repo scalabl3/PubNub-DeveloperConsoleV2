@@ -4,6 +4,8 @@ $nav-background: #171D1F                // also specified in main.sass (make sur
 $nav-hover-selected-border-radius: 9px
 
 #nav-primary
+  #nav-primary-toggle
+
   ul
     outline: -webkit-focus-ring-color auto 0px
     outline-color: -webkit-focus-ring-color
@@ -27,6 +29,9 @@ $nav-hover-selected-border-radius: 9px
   .nav-content
     ul ul li, ul ul li a
       width: $nav-primary-width - ($nav-primary-content-padding * 2)
+      white-space: nowrap
+      text-overflow: ellipsis
+      overflow: hidden
     ul li a i
       padding-right: $nav-hover-selected-border-radius
     ul ul li:hover, ul ul li a:hover

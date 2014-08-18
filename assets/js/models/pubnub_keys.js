@@ -67,7 +67,8 @@ var Keys = Backbone.Model.extend({
             this.set("pubnub", PUBNUB.init({
                 publish_key	 : this.get("pubkey"),
                 subscribe_key : this.get("subkey"),
-                uuid: "pubnub-developer-console"
+                uuid: "pubnub-developer-console",
+                ssl: true
             }));
         }
         else {

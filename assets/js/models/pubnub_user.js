@@ -160,8 +160,13 @@ var User = Backbone.Model.extend({
         this._login();
 
     },
-    retrieve_apps: function() {
+    retrieve_apps: function(settings) {
+
+        this.set("successCallback", typeof settings.success !== 'undefined' ? settings.success : null);
+        this.set("errorCallback", typeof settings.error !== 'undefined' ? settings.error : null);
+
         this._login();
+
     },
     login_complete: function() {
         return this.get("loginComplete");

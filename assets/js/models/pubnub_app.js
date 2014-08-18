@@ -79,7 +79,7 @@ var AppView = Backbone.View.extend({
     classID: "View.App [AppView]",
     tagName: 'li',
     className: 'app',
-    rawTemplate: '<a class="action-activate" href="#"><i class="fa"></i> <span>{{name}}</span></a><i data-action="delete" class="action-configure fa fa-times-circle clickable"></i>',
+    rawTemplate: '<a class="action-activate" href="#"><i class="fa"></i> <span>{{name}}</span></a>', //<i data-action="delete" class="action-configure fa fa-times-circle clickable"></i>',
     compiledTemplate: null,
     initialize: function(){
         //this.model.on('change', this.render, this);

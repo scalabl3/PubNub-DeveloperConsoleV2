@@ -2,6 +2,7 @@ $header-height: 50px
 $nav-primary-width: 250px           // also specified in nav-primary.sass (make sure they are same)
 $nav-primary-content-padding: 10px  // also specified in nav-primary.sass (make sure they are same)
 $nav-background: #171D1F            // also specified in nav-primary.sass (make sure they are same)
+$nav-footer-height: 50px
 $form-message-search-height: 48px
 $panel-toolbar-height: 30px
 
@@ -20,6 +21,8 @@ $z-data-panel: 1032
 $z-content-flow: 1031
 $z-nav: 1030
 
+$placeholder-text-color: rgb(200,200,200)
+
 @import "media-queries"
 
 html, body
@@ -28,6 +31,21 @@ html, body
   overflow: hidden
   background-color: black
   color: #222
+
+input::-webkit-input-placeholder
+  color: $placeholder-text-color !important
+
+input::-moz-placeholder
+  color: $placeholder-text-color !important
+
+input:-moz-placeholder
+  color: $placeholder-text-color !important
+
+input:-ms-input-placeholder
+  color: $placeholder-text-color !important
+
+input:focus::-webkit-input-placeholder
+  color: transparent !important
 
 .navbar-header
   width: 100%
@@ -67,6 +85,14 @@ html, body
   div.nav-content
     //border-top: 1px solid #30393B
     padding: 10px
+    position: absolute
+    top: $header-height
+    left: 0px
+    right: 0px
+    bottom: $nav-footer-height
+    overflow-x: hidden
+    overflow-y: scroll
+
 
 
 #flow-header.expand
@@ -202,15 +228,23 @@ html, body
       border-bottom: 1px solid #C0C0C0
       height: $form-message-search-height
 
-      .form-group, .form-control
-        width: 50%
-        float: left
+    .input-group
+      width: 100%
+      padding-right: 200px
+      float: left
+      input
+        display: inline-block
 
-      button
-        float: right
       .form-control
+        width: 100%
         border-radius: 4px
 
+
+  #btn-unseen
+    margin-left: 4px
+
+  #btn-publish
+    margin-left: 4px
 
   #presence-panel
     //background-color: #fef
@@ -229,6 +263,12 @@ html, body
   #panel-full-channel-list
     display: none
 
+  #panel-console-settings
+    display: none
+
+  #panel-history-explorer
+    display: none
+
   .data-list
     position: absolute
     left: 0px
@@ -240,6 +280,9 @@ html, body
     overflow-y: scroll
     transition: opacity 50ms linear 0s
     top: $header-height + $panel-toolbar-height
+
+  .data-list-table
+    height: 100%
 
 #panel-stream-message-data
   .data-list

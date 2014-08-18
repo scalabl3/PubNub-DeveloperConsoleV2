@@ -157,3 +157,7 @@ var MessageList = Backbone.Collection.extend({
     }
 });
 
+
+var NoMessagesView = Backbone.Marionette.ItemView.extend({
+    template: "#show-no-children-message-template"
+});

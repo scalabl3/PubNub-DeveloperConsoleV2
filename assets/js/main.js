@@ -90,7 +90,7 @@ $(document).ready(function(){
                         password: $("#password").val(),
                         success: function(){
                             DC.setLoggedIn();
-
+                            DC.addDemoAccount();
                             if ($("#remember").prop('checked')) {
                                 // Store the appropriate info here
                                 console.log(DC.user.get("token"));
@@ -123,6 +123,33 @@ $(document).ready(function(){
     DC.isScrolledToBottom = DC.dataPanel.prop('scrollHeight') <= DC.dataPanel.scrollTop() + DC.scrollOffset;
     DC.maxMessages = 100;
     DC.loggingIn = false;
+    DC.currentSelection = {
+        app: "",
+        keys: "",
+        channel: ""
+    };
+    DC.saveCurrentSelection = function() {
+        localStorage.setItem("currentSelection", JSON.stringify(DC.currentSelection));
+    };
+    DC.getCurrentSelection = function(complete) {
+        DC.currentSelection = JSON.parse(localStorage.getItem("currentSelection"));
+
+        if (!DC.currentSelection || DC.currentSelection == null || !DC.currentSelection.app || DC.currentSelection.app == null) {
+            DC.resetCurrentSelection();
+        }
+
+        if (complete && _.isFunction(complete)) {
+            complete(DC.currentSelection);
+        }
+    };
+    DC.resetCurrentSelection = function(){
+        DC.currentSelection = {
+            app: "",
+            keys: "",
+            channel: ""
+        };
+        DC.saveCurrentSelection();
+    };
     DC.checkScroll = function() {
         DC.dataPanel = $("#pubnub-message-list");
         DC.isScrolledToBottom = DC.dataPanel.prop('scrollHeight') - DC.dataPanel.height() <= DC.dataPanel.scrollTop() + DC.scrollOffset;
@@ -155,11 +182,18 @@ $(document).ready(function(){
         $("#btn-unseen").addClass("hidden");
 
     };
+    DC.activateHistoryExplorer = function() {
+        $("#panel-stream-message-data").hide();
+        $("#panel-full-channel-list").hide();
+        $("#panel-history-explorer").show();
+    };
     DC.activateFullChannelList = function(){
+        $("#panel-history-explorer").hide();
         $("#panel-stream-message-data").hide();
         $("#panel-full-channel-list").show();
     };
     DC.activateStreamMessageData = function(){
+        $("#panel-history-explorer").hide();
         $("#panel-full-channel-list").hide();
         $("#panel-stream-message-data").show();
     };
@@ -172,7 +206,6 @@ $(document).ready(function(){
         pubnubAppList.add(demoAccount);
     };
     DC.retrieveChannelInterval = 0;
-
     DC.checkLocalStorage = function() {
         DC.user = new User({ id: 1 });
         DC.user.fetch({
@@ -180,7 +213,34 @@ $(document).ready(function(){
                 console.log("PUBNUB: account - found in local storage, logout enabled");
                 DC.setLoggedIn();
                 DC.addDemoAccount();
-                DC.user.retrieve_apps();
+                DC.user.retrieve_apps({
+                    success: function() {
+                        DC.getCurrentSelection(function(){
+                            var app = pubnubAppListView.collection.findWhere({ name: DC.currentSelection.app });
+                            if (app) {
+                                pubnubAppListView.setSelectedModel(app);
+
+                                var keys = pubnubKeysListView.collection.findWhere({ name: DC.currentSelection.keys });
+                                if (keys) {
+                                    pubnubKeysListView.setSelectedModel(keys);
+
+                                    var channel = pubnubChannelListView.collection.findWhere({ name: DC.currentSelection.channel });
+                                    if (channel) {
+                                        pubnubChannelListView.setSelectedModel(channel);
+                                    }
+                                    else if (DC.currentSelection.channel.length > 0 ){
+                                        keys.add_channel(DC.currentSelection.channel, true);
+                                        channel = pubnubChannelListView.collection.findWhere({ name: DC.currentSelection.channel });
+                                        pubnubChannelListView.setSelectedModel(channel);
+                                    }
+                                }
+                            }
+                            else {
+                                DC.resetCurrentSelection();
+                            }
+                        });
+                    }
+                });
                 DC.user.save();
             },
             error: function() {

@@ -96,10 +96,26 @@
                 <table class="table table-hover" id="full-channel-list" ></table>
             </div>
         </div>
+        <div id="panel-history-explorer">
+            <div class="panel-toolbar">
+                <div class="panel-toolbar-title">Message History</div>
+            </div>
+            <ul id="pubnub-history-list" class="data-list"></ul>
+        </div>
+        <div id="panel-console-settings">
+            <div class="panel-toolbar">
+                <div class="panel-toolbar-title">Console Settings</div>
+            </div>
+            <ul id="pubnub-history-list" class="data-list"></ul>
+        </div>
         <div id="panel-stream-message-data">
             <div class="form-message-data-search">
-                <button id="btn-unseen" class="btn btn-small btn-info hidden"><span></span> New</button>
-                <input type="text" class="form-control" id="message-search" placeholder="Filter Message Data">
+
+                <div class="input-group">
+                    <input type="text" class="form-control" id="message-search" placeholder="Send Message to Channel (JSON, Plain Text, Numbers)" />
+                    <button id="btn-publish" class="btn btn-small btn-info"><span>Send</span></button>
+                    <button id="btn-unseen" class="btn btn-small btn-info hidden pull-right"><span></span> New</button>
+                </div>
 
             </div>
             <div class="panel-toolbar">

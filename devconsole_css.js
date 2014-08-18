@@ -1,7 +1,7 @@
 DC.log("LOAD: CSS Files")
 
 // Load CSS Files
-head.load({ css_bootstrap: "//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"}, function() {
+head.load({ css_bootstrap: "//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css"}, function() {
     csslog.bw("Bootstrap 3.2.0 CSS Loaded");
 });
 
