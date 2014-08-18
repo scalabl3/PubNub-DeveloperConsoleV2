@@ -114,14 +114,34 @@ $(document).ready(function(){
         }
     });
 
+    $("#panel-stream-message-data-infobar div.autoscroll-play button").click(function(){
+        DC.pauseDataStreamScroll();
+        DC.autoScrollPaused = true;
+    });
+
+    $("#panel-stream-message-data-infobar div.autoscroll-pause button").click(function(){
+        DC.scrollToBottom();
+        DC.autoScrollPaused = false;
+        DC.resumeDataStreamScroll();
+    });
+
+    $("#btn-publish").click(function(){
+        if ($("#publish-message").val().length > 0) {
+            var msg = $("#publish-message").val();
+            var k = pubnubKeysListView.getSelectedModel();
+            if (k) {
+                var c = pubnubChannelListView.getSelectedModel();
+                if (c) {
+                    k.publish_message(c.get("name"), msg);
+                }
+            }
+        }
+    });
 
     //console.log(CryptoJS.MD5("jasdeep@scalabl3.com").toString());
 
     DC.dataPanel = $("#pubnub-message-list");
-    DC.scrollOffset = 5;
-    DC.isWatchingMessage = false;
-    DC.isScrolledToBottom = DC.dataPanel.prop('scrollHeight') <= DC.dataPanel.scrollTop() + DC.scrollOffset;
-    DC.maxMessages = 100;
+
     DC.loggingIn = false;
     DC.currentSelection = {
         app: "",
@@ -150,38 +170,55 @@ $(document).ready(function(){
         };
         DC.saveCurrentSelection();
     };
+
+    DC.scrollOffset = 5;
+    DC.maxMessages = 100;
+    DC.autoScrollPaused = false;
+    DC.isScrolledToBottom = DC.dataPanel.prop('scrollHeight') <= DC.dataPanel.scrollTop() + DC.scrollOffset;
     DC.checkScroll = function() {
         DC.dataPanel = $("#pubnub-message-list");
         DC.isScrolledToBottom = DC.dataPanel.prop('scrollHeight') - DC.dataPanel.height() <= DC.dataPanel.scrollTop() + DC.scrollOffset;
-        //console.log(DC.isWatchingMessage);
     };
+
     DC.autoScroll = function() {
         // allow 1px inaccuracy by adding 1
-        // console.log(DC.dataPanel.prop('scrollHeight') - DC.dataPanel.height(), DC.dataPanel.scrollTop() + DC.scrollOffset);
-        // console.log(DC.isScrolledToBottom);
         // scroll to bottom if isScrolledToBottom
-        if (DC.isScrolledToBottom && !DC.isWatchingMessage) {
-            //DC.dataPanel.animate({scrollTop: (DC.dataPanel.prop('scrollHeight') - DC.dataPanel.height()) }, 100);
-            DC.dataPanel.scrollTop((DC.dataPanel.prop('scrollHeight') - DC.dataPanel.height()));
-            DC.unseenMessages = 0;
-            $("#btn-unseen span").text(DC.unseenMessages);
-            $("#btn-unseen").addClass("hidden");
+        if (DC.isScrolledToBottom && !DC.autoScrollPaused) {
+            DC.scrollToBottom();
             DC.seenMessages = $("#pubnub-message-list li.msg-item").size();
         }
         else {
-            DC.unseenMessages = $("#pubnub-message-list li.msg-item").size() - DC.seenMessages;
-            $("#btn-unseen span").text(DC.unseenMessages);
-            $("#btn-unseen").removeClass("hidden");
-            //console.log("unseen messages: " + DC.unseenMessages.toString());
+            DC.pauseDataStreamScroll();
         }
+    };
+    DC.resumeDataStreamScroll = function() {
+        DC.autoScrollPaused = false;
+        $("#panel-stream-message-data-infobar").removeClass("bg-paused");
+        $("#panel-stream-message-data-infobar").addClass("bg-success");
+        $("#panel-stream-message-data-infobar div.autoscroll-play").removeClass("hidden");
+        $("#panel-stream-message-data-infobar div.autoscroll-pause").addClass("hidden");
+        $("#panel-stream-message-data-infobar div.autoscroll-new-count").addClass("hidden");
+    };
+    DC.pauseDataStreamScroll = function() {
+        DC.autoScrollPaused = true;
+        $("#panel-stream-message-data-infobar").addClass("bg-paused");
+        $("#panel-stream-message-data-infobar").removeClass("bg-success");
+        $("#panel-stream-message-data-infobar div.autoscroll-play").addClass("hidden");
+        $("#panel-stream-message-data-infobar div.autoscroll-pause").removeClass("hidden");
+        $("#panel-stream-message-data-infobar div.autoscroll-new-count").removeClass("hidden");
     };
     DC.scrollToBottom = function() {
         DC.dataPanel.scrollTop((DC.dataPanel.prop('scrollHeight') - DC.dataPanel.height()));
-        DC.unseenMessages = 0;
-        $("#btn-unseen span").text(DC.unseenMessages);
-        $("#btn-unseen").addClass("hidden");
-
+        DC.resumeDataStreamScroll();
     };
+    DC.updateInfoBar = function(stats){
+        $("#panel-infobar-new").text(stats.messagesNew);
+        $("#panel-infobar-total").text(stats.messagesReceived);
+        $("#panel-infobar-display").text(stats.messagesDisplayed);
+    };
+
+
+
     DC.activateHistoryExplorer = function() {
         $("#panel-stream-message-data").hide();
         $("#panel-full-channel-list").hide();

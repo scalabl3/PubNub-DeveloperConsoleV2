@@ -38,7 +38,9 @@ var Channel = Backbone.Model.extend({
         name: null,
         subscribed: false,
         watching: false,
-        messageCount: 0,
+        messagesReceived: 0,
+        messagesDisplayed: 0,
+        messagesNew: 0,
         occupants: 0,
         messages: null,
         presence: null,
@@ -86,12 +88,26 @@ var Channel = Backbone.Model.extend({
             mlist.add({ timetoken: env[1], content: message });
 
             // To Conserve Browser memory (if you leave the console open), max out number of messages that will be shown in window
-            if (mlist.length > DC.maxMessages) {
+            if (mlist.length > DC.maxMessages + 1) {
                 mlist.shift();
             }
 
             this.set("messages", mlist);
-            this.set("messageCount", mlist.length);
+            this.set("messagesReceived", this.get("messagesReceived") + 1);
+            this.set("messagesDisplayed", mlist.length - 1);
+
+            if (DC.autoScrollPaused) {
+                this.set("messagesNew", this.get("messagesNew") + 1);
+            }
+            else {
+                this.set("messagesNew", 0);
+            }
+
+            DC.updateInfoBar({
+                messagesReceived: this.get("messagesReceived"),
+                messagesDisplayed: this.get("messagesDisplayed"),
+                messagesNew: this.get("messagesNew")
+            });
         }
     },
     receive_presence: function(message) {

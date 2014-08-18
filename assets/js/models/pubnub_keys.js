@@ -162,6 +162,12 @@ var Keys = Backbone.Model.extend({
             }
         }
     },
+    publish_message: function(ch, msg) {
+        this.attributes.pubnub.publish({
+            channel: ch,
+            message: msg
+        });
+    },
     toggle_active: function() {
         if (this.get("active")) {
             this.set("active", false);

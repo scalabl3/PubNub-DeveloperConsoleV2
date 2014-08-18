@@ -112,14 +112,20 @@
             <div class="form-message-data-search">
 
                 <div class="input-group">
-                    <input type="text" class="form-control" id="message-search" placeholder="Send Message to Channel (JSON, Plain Text, Numbers)" />
-                    <button id="btn-publish" class="btn btn-small btn-info"><span>Send</span></button>
-                    <button id="btn-unseen" class="btn btn-small btn-info hidden pull-right"><span></span> New</button>
+                    <input type="text" class="form-control" id="publish-message" placeholder="Send Message to Channel (JSON, Plain Text, Numbers)" />
+                    <button id="btn-publish" class="btn btn-small btn-default"><span>Send</span></button>
                 </div>
 
             </div>
             <div class="panel-toolbar">
                 <div class="panel-toolbar-title">Data Stream</div>
+            </div>
+            <div id="panel-stream-message-data-infobar" class="panel-infobar bg-success">
+                <div class="autoscroll-play"><button class="btn btn-default btn-xs"><i class="fa fa-play"></i>&nbsp;&nbsp;<span> <strong>AutoScroll On</strong></span></button></div>
+                <div class="autoscroll-pause hidden"><button class="btn btn-default btn-xs"><i class="fa fa-pause"></i>&nbsp;&nbsp;<span> <strong>AutoScroll Paused</strong></span></button></div>
+                <div class="autoscroll-new-count hidden"><strong><span id="panel-infobar-new"></span> new messages</strong></div>
+                <div><span id="panel-infobar-display"></span> messages displayed</div>
+                <div><span id="panel-infobar-total"></span> total messages received</div>
             </div>
             <ul id="pubnub-message-list" class="data-list"></ul>
         </div>

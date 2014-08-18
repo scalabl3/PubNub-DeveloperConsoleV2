@@ -169,21 +169,45 @@ input:focus::-webkit-input-placeholder {
       padding: 0.731rem;
       width: 100%;
       position: absolute;
-      z-index: 11;
+      z-index: 1033;
       bottom: 0px;
       margin: 0px;
-      background: none repeat scroll 0% 0% #aaaaaa;
-      border-bottom: 1px solid silver;
+      background: none repeat scroll 0% 0% #666666;
       height: 48px; }
     #content-flow #data-panel .input-group {
       width: 100%;
-      padding-right: 200px;
+      display: -webkit-flex;
+      -webkit-flex-direction: row;
+      display: flex;
+      flex-direction: row;
       float: left; }
       #content-flow #data-panel .input-group input {
-        display: inline-block; }
-      #content-flow #data-panel .input-group .form-control {
-        width: 100%;
+        display: inline-block;
+        flex-grow: 3;
         border-radius: 4px; }
+      #content-flow #data-panel .input-group .btn {
+        border-radius: 4px;
+        width: 140px; }
+    #content-flow #data-panel .bg-paused {
+      background-color: #ebbd5c; }
+    #content-flow #data-panel .panel-infobar {
+      width: 100%;
+      position: absolute;
+      z-index: 1034;
+      height: 45px;
+      bottom: 48px;
+      margin: 0px;
+      border-top: double #cccccc;
+      text-align: center; }
+      #content-flow #data-panel .panel-infobar div {
+        display: inline-block;
+        font-size: 11px;
+        color: #555555;
+        margin: 0px 10px;
+        line-height: 43px; }
+      #content-flow #data-panel .panel-infobar button {
+        padding: 1px 15px;
+        margin-top: -2px; }
   #content-flow #btn-unseen {
     margin-left: 4px; }
   #content-flow #btn-publish {
@@ -221,4 +245,4 @@ input:focus::-webkit-input-placeholder {
     height: 100%; }
 
 #panel-stream-message-data .data-list {
-  bottom: 48px; }
+  bottom: 93px; }

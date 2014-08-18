@@ -5,6 +5,7 @@ $nav-background: #171D1F            // also specified in nav-primary.sass (make 
 $nav-footer-height: 50px
 $form-message-search-height: 48px
 $panel-toolbar-height: 30px
+$panel-infobar-height: 45px
 
 $shadow-blur: 8px
 $shadow-blur-left: 12px
@@ -221,24 +222,49 @@ input:focus::-webkit-input-placeholder
       padding: 0.731rem
       width: 100%
       position: absolute
-      z-index: 11
+      z-index: $z-data-panel + 1
       bottom: 0px
       margin: 0px
-      background: none repeat scroll 0% 0% #aaa
-      border-bottom: 1px solid #C0C0C0
+      background: none repeat scroll 0% 0% #666
       height: $form-message-search-height
 
     .input-group
       width: 100%
-      padding-right: 200px
+      display: -webkit-flex
+      -webkit-flex-direction: row
+      display: flex
+      flex-direction: row
       float: left
       input
         display: inline-block
-
-      .form-control
-        width: 100%
+        flex-grow: 3
         border-radius: 4px
+      .btn
+        border-radius: 4px
+        width: 140px
 
+    .bg-paused
+      background-color: #EBBD5C
+
+    .panel-infobar
+      width: 100%
+      position: absolute
+      z-index: $z-data-panel + 2
+      height: $panel-infobar-height
+      //background: none repeat scroll 0% 0% #aaa
+      bottom: $form-message-search-height
+      margin: 0px
+      border-top: double #ccc
+      text-align: center
+      div
+        display: inline-block
+        font-size: 11px
+        color: #555
+        margin: 0px 10px
+        line-height: $panel-infobar-height - 2
+      button
+        padding: 1px 15px
+        margin-top: -2px
 
   #btn-unseen
     margin-left: 4px
@@ -286,5 +312,5 @@ input:focus::-webkit-input-placeholder
 
 #panel-stream-message-data
   .data-list
-    bottom: $form-message-search-height
+    bottom: $form-message-search-height + $panel-infobar-height
 
