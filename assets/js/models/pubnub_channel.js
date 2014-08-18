@@ -103,11 +103,13 @@ var Channel = Backbone.Model.extend({
                 this.set("messagesNew", 0);
             }
 
-            DC.updateInfoBar({
-                messagesReceived: this.get("messagesReceived"),
-                messagesDisplayed: this.get("messagesDisplayed"),
-                messagesNew: this.get("messagesNew")
-            });
+            if (this.get("watching")) {
+                DC.updateInfoBar({
+                    messagesReceived: this.get("messagesReceived"),
+                    messagesDisplayed: this.get("messagesDisplayed"),
+                    messagesNew: this.get("messagesNew")
+                });
+            }
         }
     },
     receive_presence: function(message) {

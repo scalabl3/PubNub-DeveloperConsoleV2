@@ -184,8 +184,8 @@ $(document).ready(function(){
         // allow 1px inaccuracy by adding 1
         // scroll to bottom if isScrolledToBottom
         if (DC.isScrolledToBottom && !DC.autoScrollPaused) {
-            DC.scrollToBottom();
             DC.seenMessages = $("#pubnub-message-list li.msg-item").size();
+            DC.resumeDataStreamScroll();
         }
         else {
             DC.pauseDataStreamScroll();
@@ -193,6 +193,7 @@ $(document).ready(function(){
     };
     DC.resumeDataStreamScroll = function() {
         DC.autoScrollPaused = false;
+        DC.scrollToBottom();
         $("#panel-stream-message-data-infobar").removeClass("bg-paused");
         $("#panel-stream-message-data-infobar").addClass("bg-success");
         $("#panel-stream-message-data-infobar div.autoscroll-play").removeClass("hidden");
@@ -209,7 +210,6 @@ $(document).ready(function(){
     };
     DC.scrollToBottom = function() {
         DC.dataPanel.scrollTop((DC.dataPanel.prop('scrollHeight') - DC.dataPanel.height()));
-        DC.resumeDataStreamScroll();
     };
     DC.updateInfoBar = function(stats){
         $("#panel-infobar-new").text(stats.messagesNew);

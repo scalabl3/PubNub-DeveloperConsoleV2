@@ -79,7 +79,7 @@ var MessageView = Backbone.View.extend({
         if (this.model.get("content")) {
             this.create_render_content();
             this.$el.html(this.compiledTemplate(this.renderContent));
-            this.$el.find("div.msg-item-container").mouseover(function(){
+            this.$el.find("div.msg-item-container").click(function(){
                 DC.pauseDataStreamScroll();
             });
             this.model.set("rendered", true);

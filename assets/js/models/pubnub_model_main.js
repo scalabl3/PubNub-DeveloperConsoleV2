@@ -283,6 +283,7 @@ pubnubChannelListView.on( "selectionChanged", function(newModel, oldModel) {
             }).render();
 
             DC.activateStreamMessageData();
+            //DC.resumeDataStreamScroll();
         }
 
         DC.currentSelection.channel = selectedChannel.get("name");
