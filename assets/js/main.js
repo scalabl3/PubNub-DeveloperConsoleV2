@@ -242,7 +242,27 @@ $(document).ready(function(){
         demoAccount.addAppKey("Demo", "demo", "demo");
         pubnubAppList.add(demoAccount);
     };
+
     DC.retrieveChannelInterval = 0;
+    DC.isotopeActive = false;
+    DC.isotopeSort = ['occupants', 'name'];
+    DC.isotopeSortByName = function() {
+        if (DC.isotopeActive) {
+            $("#panel-full-channel-list div.list-header div.name span").addClass("sortedby");
+            $("#panel-full-channel-list div.list-header div.occupants span").removeClass("sortedby");
+            DC.isotopeSort = ['name', 'occupants'];
+            $("#full-channel-list").isotope({ sortBy: DC.isotopeSort });
+        }
+    };
+    DC.isotopeSortByOccupants = function(){
+        if (DC.isotopeActive) {
+            $("#panel-full-channel-list div.list-header div.occupants span").addClass("sortedby");
+            $("#panel-full-channel-list div.list-header div.name span").removeClass("sortedby");
+            DC.isotopeSort = ['occupants', 'name'];
+            $("#full-channel-list").isotope({ sortBy: DC.isotopeSort });
+        }
+    };
+
     DC.checkLocalStorage = function() {
         DC.user = new User({ id: 1 });
         DC.user.fetch({

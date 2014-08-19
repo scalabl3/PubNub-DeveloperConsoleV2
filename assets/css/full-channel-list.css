@@ -6,3 +6,52 @@ table#full-channel-list tr.selected td {
   font-weight: bold; }
 table#full-channel-list tr.channel-list-item:hover {
   background: #eeeeff; }
+
+#panel-full-channel-list ul {
+  clear: both; }
+#panel-full-channel-list div.list-header {
+  padding: 10px 10px;
+  width: 100%;
+  border-bottom: 1px solid #eeeeee;
+  display: block;
+  box-sizing: border-box; }
+  #panel-full-channel-list div.list-header div span {
+    cursor: pointer; }
+  #panel-full-channel-list div.list-header div span.sortedby {
+    color: #428bca; }
+    #panel-full-channel-list div.list-header div span.sortedby i:before {
+      content: "\f0da"; }
+  #panel-full-channel-list div.list-header div.name {
+    text-transform: capitalize;
+    font-weight: bold;
+    width: 90%;
+    float: left; }
+  #panel-full-channel-list div.list-header div.occupants {
+    text-transform: capitalize;
+    font-weight: bold;
+    width: 10%;
+    float: left;
+    text-align: right; }
+
+#full-channel-list {
+  width: 100%;
+  list-style: none;
+  padding: 0; }
+  #full-channel-list li {
+    padding: 10px 10px;
+    width: 100%;
+    border-top: 1px solid;
+    border-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    display: block; }
+    #full-channel-list li div {
+      width: 100%;
+      float: left;
+      padding: 2px 4px; }
+    #full-channel-list li div.name {
+      width: 90%; }
+    #full-channel-list li div.occupants {
+      width: 10%;
+      text-align: right; }
+  #full-channel-list li:hover {
+    background-color: #f6f6f6; }

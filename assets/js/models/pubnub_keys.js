@@ -134,7 +134,7 @@ var Keys = Backbone.Model.extend({
                         self.attributes.pubnub.here_now({
                             channel: subChannel.get("name"),
                             callback: function(herenow) {
-                                console.log(herenow);
+                                //console.log(herenow);
                                 //subChannel.receive_presence(message);
                             }
                         });
@@ -185,7 +185,7 @@ var KeysView = Backbone.View.extend({
     classID: "View.Keys [KeysView]",
     tagName: 'li',
     className: 'keys',
-    rawTemplate: '<a href="#"><i data-action="connect" class="fa fa-key"></i> <span>{{name}}</span></a><i data-action="edit" class="fa fa-cog connected-status connected"></i>',
+    rawTemplate: '<a href="#"><i data-action="connect" class="fa fa-key"></i> <span>{{name}}</span></a><i data-action="edit" class="fa fa-users connected-status connected"></i>',
     compiledTemplate: null,
 
     initialize: function(){

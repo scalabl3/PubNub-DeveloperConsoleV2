@@ -375,7 +375,7 @@ var PubnubFullChannelListView = Backbone.CollectionView.extend({
     modelView: FullChannelItemView,
     // Clear out css for selected channels (just to ensure it's cleared in race conditions of fast swapping App/AppKeys, etc.)
     _reset_css: function() {
-        this.$el.find("tr.selected").removeClass("selected");
+        //this.$el.find("tr.selected").removeClass("selected");
     },
     // Assign a new collection to render (unwatch current channels, clear the collection, clear dependents, assign the collection, render, and reset css (just in case)
     assign_collection: function(c){
@@ -384,9 +384,9 @@ var PubnubFullChannelListView = Backbone.CollectionView.extend({
         if (c != null) {
             this.render();
             this._reset_css();
-            if (!this.$el.find("thead").length){
-                this.$el.prepend("<thead><tr><th>Name</th><th>Occupants</th></tr></thead>");
-            }
+//            if (!this.$el.find("thead").length){
+//                this.$el.prepend('<thead><tr><th data-sort-type="name">Name</th><th data-sort-type="occupants">Occupants</th></tr></thead>');
+//            }
         }
     },
     // Clear the css, remove the views, and unset selected channel

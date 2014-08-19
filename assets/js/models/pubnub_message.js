@@ -109,9 +109,9 @@ var MessageView = Backbone.View.extend({
             var highlighted = this.syntaxHighlight(prettified);
             html = ("<pre>" + highlighted + "</pre>");
         }
-        // if parse or stringify fail, output content as a string
+        // if parse or stringify fail, output content as a string (no need to display the syntax error)
         catch (err) {
-            console.log(err);
+            //console.log(err);
             html = "<pre><span class=\"string\">" + data + "</span></pre>";
         }
 

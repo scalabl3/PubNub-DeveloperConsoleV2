@@ -26,7 +26,11 @@ head.load({js_consolelog: "assets/js/console_logging.js"}, function () {
             jslog.gw("JQuery UI 1.10.4 loaded");
         });
 
-        head.load({ js_pubnub: "//cdn.pubnub.com/pubnub.min.js"}, function () {
+        head.load({ js_isotope: "//cdnjs.cloudflare.com/ajax/libs/jquery.isotope/2.0.0/isotope.pkgd.js"}, function(){
+            jslog.gw("Isotope 2.0.0 loaded");
+        });
+
+        head.load({ js_pubnub: "//cdn.pubnub.com/pubnub.js"}, function () {
             jslog.gw("PubNub 3.6.6 SDK loaded");
         });
 
