@@ -18,6 +18,7 @@ head.ready(["css_bootstrap"], function(){
     head.load({ css_pres: "assets/css/presence-data.css"}, function() { csslog.bw("Presence Data CSS Loaded"); });
     head.load({ css_nav: "assets/css/nav-primary.css"}, function() { csslog.bw("Navigation CSS Loaded");});
     head.load({ css_list: "assets/css/full-channel-list.css"}, function() { csslog.bw("Channel List CSS Loaded");});
+    head.load({ css_list: "assets/css/history-form.css"}, function() { csslog.bw("History Explorer CSS Loaded");});
 
     head.ready(["css_main"], function(){
         csslog.bw("Primary Structure CSS Loaded");

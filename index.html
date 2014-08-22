@@ -63,7 +63,8 @@
         </ul>
     </div>
     <footer class="nav-footer">
-
+        <div id="console-help" class="left"><i class="fa fa-question"></i></div>
+        <div id="console-settings" class="right"><i class="fa fa-cog"></i></div>
     </footer>
 </nav>
 <div id="flow-header">
@@ -88,34 +89,75 @@
 </div>
 <div id="content-flow">
     <div id="data-panel">
+
+
+
+
         <div id="panel-full-channel-list">
             <div class="panel-toolbar">
                 <div class="panel-toolbar-title">Channel List <span id="channel-count"></span></div>
             </div>
+            <form role="form" class="form-inline">
+                <div class="form-group">
+                    <label class="sr-only" for="add-channel-name">Add Channel</label>
+                    <input type="text" class="form-control" id="add-channel-name" placeholder="Enter channel name">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" checked="checked"> Subscribe
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-default">Add</button>
+                </div>
+            </form>
             <div class="data-list">
                 <div class="list-header clearfix">
-                    <div class="name" data-sort-value="name" onclick='DC.isotopeSortByName()'><span><i class="fa"></i> name</span></div>
-                    <div class="occupants" data-sort-value="occupants" onclick='DC.isotopeSortByOccupants()'><span class="sortedby"><i class="fa"></i> occupants</span></div>
+                    <div class="subscribed"><i class="fa fa-circle-o" style="color: #aaa"></i></div>
+                    <div class="name" data-sort-value="name" onclick='DC.isotopeSortByName()'><span><i class="fa"></i>name</span></div>
+                    <div class="occupants" data-sort-value="occupants" onclick='DC.isotopeSortByOccupants()'><span class="sortedby"><i class="fa"></i>occupants</span></div>
                 </div>
                 <ul id="full-channel-list"></ul>
             </div>
         </div>
+
+
+
+
         <div id="panel-history-explorer">
             <div class="panel-toolbar">
-                <div class="panel-toolbar-title">Message History</div>
+                <div class="panel-toolbar-title">History Messages</div>
             </div>
+            <form role="form">
+
+            </form>
             <ul id="pubnub-history-list" class="data-list"></ul>
         </div>
+
+
+
+
         <div id="panel-console-settings">
             <div class="panel-toolbar">
                 <div class="panel-toolbar-title">Console Settings</div>
             </div>
-            <ul id="pubnub-history-list" class="data-list"></ul>
+            <div id="pubnub-console-settings" class="data-list"></div>
         </div>
+
+
+
+
+        <div id="panel-pam-manager">
+            <div class="panel-toolbar">
+                <div class="panel-toolbar-title">PAM Manager</div>
+            </div>
+            <div id="pubnub-pam-manager" class="data-list"></div>
+        </div>
+
+
+
+
         <div id="panel-stream-message-data">
             <div class="form-message-data-search">
-
-                <div class="input-group">
+                <div class="form-group">
                     <input type="text" class="form-control" id="publish-message" placeholder="Send Message to Channel (JSON, Plain Text, Numbers)" />
                     <button id="btn-publish" class="btn btn-small btn-default"><span>Send</span></button>
                 </div>
@@ -134,6 +176,10 @@
             <ul id="pubnub-message-list" class="data-list"></ul>
         </div>
     </div>
+
+
+
+
     <div id="presence-panel" class="hidden-xs">
         <div id="stream-presence-data">
             <div class="panel-toolbar">
@@ -145,6 +191,55 @@
             <ul id="pubnub-presence-list" class="data-list"></ul>
         </div>
     </div>
+
+    <div id="panel-empty-right" class="hidden-xs">
+        <div class="panel-toolbar">
+            <div class="panel-toolbar-content">
+                <div class="panel-toolbar-title">&nbsp;</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="panel-history-form">
+        <div class="panel-toolbar">
+            <div class="panel-toolbar-content">
+                <div class="panel-toolbar-title">Explore History</div>
+            </div>
+        </div>
+        <div class="data-list">
+            <form id="history-form" role="form" class="form-horizontal">
+                <div class="form-section">
+                    <div class="form-section-title">Most Recent Messages</div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="history-recent-count">How Many?</label>
+                        <div class="col-sm-8">
+                            <input type="number" id="history-recent-count" value="201">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-4">
+                            <button type="submit" class="btn btn-default btn-sm" id="btn-history-recent">Retrieve</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="form-section-title">Oldest Messages</div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="history-recent-count">How Many?</label>
+                        <div class="col-sm-8">
+                            <input type="number" id="history-recent-count" value="500">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-4">
+                            <button type="submit" class="btn btn-default btn-sm" id="btn-history-oldest">Retrieve</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </div>
 
 

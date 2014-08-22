@@ -35,8 +35,8 @@
 var Keys = Backbone.Model.extend({
     classID: "Model.Keys [Keys]",
     defaults: {
-        appName: "not set",
-        name: "undefined",
+        app: null,
+        name: "[NONE]",
         pubkey: "",
         subkey: "",
         secretKey: "",
@@ -58,7 +58,8 @@ var Keys = Backbone.Model.extend({
     initialize: function() {
         var c = new ChannelList();
         // Add Default Nav View Channel List using global_here_now as first "channel" item
-        c.add({ name: "View Channel List", isViewChannels: true });
+        c.add({ name: "Add/View Channel List", navID: "link-view-all-channels", navIcon: "fa-list-alt", isNavLink: true, sortValue: "!" });
+        //c.add({ name: "Add Channels...", navID: "link-add-channel", navIcon: "fa-plus", isNavLink: true, sortValue: "{" });
         this.set("channels", c);
     },
     connect: function() {
@@ -98,13 +99,19 @@ var Keys = Backbone.Model.extend({
         // Add Channel to ChannelList
         var channels = this.get("channels");
         var added = this.attributes.channels.findWhere({name: name});
+        var newChannel = null;
+
         if (!added) {
-            channels.add({name: name});
+            newChannel = channels.add({appKeys: this, app: this.get("app"), name: name, sortValue: name.toLowerCase() });
             this.set("channels", channels);
+            // Save current list of channels to local storage
+            DC.LocalStore.channels(name);
         }
         if (subscribe) {
             this.subscribe_channel(name);
         }
+
+        return newChannel;
     },
     remove_channel: function(name) {
         this.unsubscribe_channel(name);
@@ -113,10 +120,18 @@ var Keys = Backbone.Model.extend({
         var channels = this.get("channels");
         channels.remove(channels.findWhere({name: name}));
         this.set("channels", channels);
+
+        // Remove subscribed status from Full Channel List
+        pubnubFullChannelList.set_unsubscribed(name);
+        // Save current list of channels to local storage
+        DC.LocalStore.channels(this.channel_names());
     },
     subscribe_channel: function(name, completeCallback){
         var self = this;
         var subChannel = this.attributes.channels.findWhere({name: name});
+        if (!subChannel) {
+            subChannel = this.add_channel(name);
+        }
         if (subChannel) {
             if (!subChannel.get("subscribed")) {
                 console.log("\tPN: subscribing to " + name);
@@ -138,7 +153,7 @@ var Keys = Backbone.Model.extend({
                                 //subChannel.receive_presence(message);
                             }
                         });
-                        if (completeCallback && typeof(completeCallback) == "function") {
+                        if (_.isFunction(completeCallback)) {
                             completeCallback();
                         }
                     }
@@ -148,6 +163,7 @@ var Keys = Backbone.Model.extend({
     },
     unsubscribe_channel: function(name, completeCallback) {
         var unsubChannel = this.attributes.channels.findWhere({name: name});
+
         if (unsubChannel && unsubChannel.get("subscribed")) {
             console.log("\tPN: unsubscribing to " + name);
             if (this.attributes.pubnub){
@@ -157,9 +173,24 @@ var Keys = Backbone.Model.extend({
             unsubChannel.set("watching", false);
             unsubChannel.clear_messages();
 
-            if (completeCallback && typeof(completeCallback) == "function") {
+            // Remove subscribed status from Full Channel List
+            pubnubFullChannelList.set_unsubscribed(name);
+
+            if (_.isFunction(completeCallback)) {
                 completeCallback();
             }
+        }
+    },
+    channel_names: function() {
+        var clistAll = this.get("channels");
+        var clist = clistAll.where({ isNavLink: false });
+        if (!_.isEmpty(clist)) {
+            var names = _.map(clist, function(c) { return c.get("name") });
+            //console.log(names);
+            return names;
+        }
+        else {
+            return [];
         }
     },
     publish_message: function(ch, msg) {
@@ -167,6 +198,75 @@ var Keys = Backbone.Model.extend({
             channel: ch,
             message: msg
         });
+    },
+    get_history: function(options) {
+
+        var self = this;
+        var subChannel = this.attributes.channels.findWhere({name: options.channel});
+        options.include_token = true;
+
+        var originalOptions = JSON.deepCopy(options);
+
+        if (subChannel) {
+            var hlist = subChannel.get("history");
+            hlist.reset();
+
+            function get_all_history(args) {
+                var channel  = args.channel,
+                    completeCallback = args.callback,
+                    totalCount = args.count,
+                    start = 0,
+                    count = totalCount > 100 ? 100 : totalCount,
+                    history  = [],
+                    params   = {
+                            channel  : channel,
+                            count    : count,
+                            include_token: true,
+                            callback : function(messages) {
+                                var msgs = messages[0];
+                                start = messages[1];
+                                params.start = start;
+
+
+                                _.forEach(msgs, function(m) {
+                                    history.push(m)
+                                });
+
+                                if (history.length >= totalCount) {
+                                    return completeCallback(history);
+                                }
+                                //console.log(totalCount - history.length);
+                                if (totalCount - history.length > 100) {
+                                    params.count = 100;
+                                }
+                                else {
+                                    params.count = totalCount - history.length;
+                                }
+                                //console.log(count);
+
+                                add_messages();
+                            }
+                    };
+
+                add_messages();
+
+                function add_messages() {
+                    //console.log("add_messages", params.count);
+                    self.attributes.pubnub.history(params)
+                }
+            }
+
+            options.callback = function(messages) {
+                _.forEach(messages, function(m){
+                    var thisIndex = hlist.length + 1 || 1;
+                    hlist.add({ displayIndex: thisIndex, timetoken: m.timetoken, content: m.message });
+                });
+                subChannel.set("history", hlist);
+            };
+
+            get_all_history(options);
+
+        }
     },
     toggle_active: function() {
         if (this.get("active")) {
@@ -197,6 +297,7 @@ var KeysView = Backbone.View.extend({
     toggle_active: function() { this.model.toggle_active(); },
 
     render: function() {
+        debuglog.by("Render AppKeys - ", this.model.get("name"));
         var attributes = this.model.toJSON();
         this.$el.html(this.compiledTemplate(attributes));
 

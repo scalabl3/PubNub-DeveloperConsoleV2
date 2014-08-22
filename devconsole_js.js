@@ -1,3 +1,8 @@
+// Create a namespace for all the objects
+window.DC = {};
+var DC = window.DC;
+DC.BaseClasses = {};
+
 // Load Javascript Libraries
 head.load({js_consolelog: "assets/js/console_logging.js"}, function () {
 
@@ -30,6 +35,10 @@ head.load({js_consolelog: "assets/js/console_logging.js"}, function () {
             jslog.gw("Isotope 2.0.0 loaded");
         });
 
+        head.load({ js_stampit: "//cdnjs.cloudflare.com/ajax/libs/stampit/0.7.1/stampit.min.js"}, function(){
+            jslog.gw("Stampit 0.7.1 loaded");
+        });
+
         head.load({ js_pubnub: "//cdn.pubnub.com/pubnub.js"}, function () {
             jslog.gw("PubNub 3.6.6 SDK loaded");
         });
@@ -42,11 +51,11 @@ head.load({js_consolelog: "assets/js/console_logging.js"}, function () {
             jslog.gw("Bootstrap 3.2.0 JS loaded");
         });
 
-        head.load({ js_underscore: "assets/jslibs/underscore-1.6.0.js"}, function () {
-            jslog.gw("Underscore 1.6.0 JS loaded")
+        head.load({ js_lodash: "//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js"}, function () {
+            jslog.gw("Lodash 2.4.1 JS loaded")
         });
 
-        head.ready(["js_jquery", "js_pubnub", "js_underscore", "js_taffy"], function () {
+        head.ready(["js_jquery", "js_pubnub", "js_lodash", "js_taffy"], function () {
 
             head.load({ js_backbone: "//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"}, function () {
                 jslog.gw("Backbone 1.1.2 loaded ");

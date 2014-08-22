@@ -23,6 +23,13 @@ input:focus::-webkit-input-placeholder {
 .navbar-header {
   width: 100%; }
 
+.tooltip {
+  position: fixed; }
+
+.tooltip-inner {
+  background: #ffffcc;
+  color: #222222; }
+
 #nav-primary.contract {
   margin-left: -250px; }
   @media only screen and (max-width: 480px) {
@@ -52,6 +59,31 @@ input:focus::-webkit-input-placeholder {
     padding: 0px;
     width: 250px;
     background-color: #111111; }
+  #nav-primary footer.nav-footer {
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    margin: 0px;
+    z-index: 1031;
+    color: #aaaaaa; }
+    #nav-primary footer.nav-footer .left {
+      width: 50%;
+      float: left;
+      border-right: 1px solid #333333; }
+    #nav-primary footer.nav-footer .right {
+      width: 50%;
+      float: right; }
+    #nav-primary footer.nav-footer div {
+      padding: 0.731rem;
+      border-top: 1px solid #333333;
+      height: 50px;
+      font-size: 20px;
+      text-align: center;
+      vertical-align: middle;
+      line-height: 36px; }
+    #nav-primary footer.nav-footer div:hover {
+      background-color: #333333;
+      color: white; }
   #nav-primary div.nav-content {
     padding: 10px;
     position: absolute;
@@ -174,18 +206,18 @@ input:focus::-webkit-input-placeholder {
       margin: 0px;
       background: none repeat scroll 0% 0% #666666;
       height: 48px; }
-    #content-flow #data-panel .input-group {
+    #content-flow #data-panel .form-group {
       width: 100%;
       display: -webkit-flex;
       -webkit-flex-direction: row;
       display: flex;
       flex-direction: row;
       float: left; }
-      #content-flow #data-panel .input-group input {
+      #content-flow #data-panel .form-group input {
         display: inline-block;
         flex-grow: 3;
         border-radius: 4px; }
-      #content-flow #data-panel .input-group .btn {
+      #content-flow #data-panel .form-group .btn {
         border-radius: 4px;
         width: 140px; }
     #content-flow #data-panel .bg-paused {
@@ -212,23 +244,38 @@ input:focus::-webkit-input-placeholder {
     margin-left: 4px; }
   #content-flow #btn-publish {
     margin-left: 4px; }
-  #content-flow #presence-panel {
+  #content-flow #presence-panel, #content-flow #panel-empty-right, #content-flow #panel-history-form {
     width: 38.2%;
     border-left: 1px solid silver;
     float: right; }
     @media only screen and (max-width: 768px) {
-      #content-flow #presence-panel {
+      #content-flow #presence-panel, #content-flow #panel-empty-right, #content-flow #panel-history-form {
         display: none;
         width: 100%; } }
-  #content-flow #panel-stream-message-data, #content-flow #stream-presence-data, #content-flow #panel-full-channel-list {
+  #content-flow #panel-empty-right {
+    display: none;
+    position: relative;
+    height: 100%; }
+  #content-flow #panel-history-form {
+    display: none;
+    position: relative;
+    height: 100%; }
+    #content-flow #panel-history-form form {
+      width: 100%; }
+  #content-flow #panel-stream-message-data, #content-flow #stream-presence-data, #content-flow #panel-full-channel-list, #content-flow #panel-console-settings, #content-flow #panel-pam-manager, #content-flow #panel-history-explorer {
     height: 100%;
     position: relative;
     box-sizing: border-box; }
   #content-flow #panel-full-channel-list {
     display: none; }
+    #content-flow #panel-full-channel-list .panel-toolbar {
+      background-color: #333399;
+      color: white; }
   #content-flow #panel-console-settings {
     display: none; }
   #content-flow #panel-history-explorer {
+    display: none; }
+  #content-flow #panel-pam-manager {
     display: none; }
   #content-flow .data-list {
     position: absolute;
@@ -246,3 +293,34 @@ input:focus::-webkit-input-placeholder {
 
 #panel-stream-message-data .data-list {
   bottom: 93px; }
+
+#panel-full-channel-list form {
+  padding: 0.731rem;
+  width: 100%;
+  position: absolute;
+  z-index: 1033;
+  bottom: 0px;
+  margin: 0px;
+  background: none repeat scroll 0% 0% #666666;
+  height: 48px; }
+  #panel-full-channel-list form .form-group {
+    width: 100%;
+    display: -webkit-flex;
+    -webkit-flex-direction: row;
+    display: flex;
+    flex-direction: row;
+    float: left; }
+    #panel-full-channel-list form .form-group input {
+      display: inline-block;
+      flex-grow: 3;
+      border-radius: 4px; }
+    #panel-full-channel-list form .form-group input[type='text'] {
+      margin-right: 10px; }
+    #panel-full-channel-list form .form-group div.checkbox {
+      margin-top: 7px;
+      margin-right: 10px;
+      color: white; }
+    #panel-full-channel-list form .form-group .btn {
+      border-radius: 4px; }
+#panel-full-channel-list .data-list {
+  bottom: 35px; }

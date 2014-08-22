@@ -1,0 +1,9 @@
+#panel-history-form form .form-section {
+  border-bottom: 1px solid silver;
+  padding: 20px; }
+#panel-history-form form .form-section-title {
+  color: #666666;
+  font-weight: bold;
+  margin-bottom: 20px; }
+#panel-history-form label {
+  font-size: 12px; }

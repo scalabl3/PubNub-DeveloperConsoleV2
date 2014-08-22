@@ -4,6 +4,7 @@ $nav-primary-content-padding: 10px  // also specified in nav-primary.sass (make 
 $nav-background: #171D1F            // also specified in nav-primary.sass (make sure they are same)
 $nav-footer-height: 50px
 $form-message-search-height: 48px
+$form-add-channel-height: 35px
 $panel-toolbar-height: 30px
 $panel-infobar-height: 45px
 
@@ -21,6 +22,7 @@ $z-flow-header: 1033
 $z-data-panel: 1032
 $z-content-flow: 1031
 $z-nav: 1030
+$z-nav-footer: 1031
 
 $placeholder-text-color: rgb(200,200,200)
 
@@ -50,6 +52,13 @@ input:focus::-webkit-input-placeholder
 
 .navbar-header
   width: 100%
+
+.tooltip
+  position: fixed
+
+.tooltip-inner
+  background: #ffffcc
+  color: #222
 
 #nav-primary.contract
   margin-left: 0px - $nav-primary-width
@@ -82,7 +91,30 @@ input:focus::-webkit-input-placeholder
     width: $nav-primary-width
     background-color: #111
   footer.nav-footer
-
+    width: 100%
+    position: absolute
+    bottom: 0px
+    margin: 0px
+    z-index: $z-nav-footer
+    color: #aaa
+    .left
+      width: 50%
+      float: left
+      border-right: 1px solid #333
+    .right
+      width: 50%
+      float: right
+    div
+      padding: 0.731rem
+      border-top: 1px solid #333
+      height: $nav-footer-height
+      font-size: 20px
+      text-align: center
+      vertical-align: middle
+      line-height: $nav-footer-height - 14px
+    div:hover
+      background-color: #333
+      color: #fff
   div.nav-content
     //border-top: 1px solid #30393B
     padding: 10px
@@ -228,7 +260,7 @@ input:focus::-webkit-input-placeholder
       background: none repeat scroll 0% 0% #666
       height: $form-message-search-height
 
-    .input-group
+    .form-group
       width: 100%
       display: -webkit-flex
       -webkit-flex-direction: row
@@ -272,7 +304,7 @@ input:focus::-webkit-input-placeholder
   #btn-publish
     margin-left: 4px
 
-  #presence-panel
+  #presence-panel, #panel-empty-right, #panel-history-form
     //background-color: #fef
     width: 38.2%
     border-left: 1px solid #C0C0C0
@@ -281,18 +313,36 @@ input:focus::-webkit-input-placeholder
       display: none
       width: 100%
 
-  #panel-stream-message-data, #stream-presence-data, #panel-full-channel-list
+  #panel-empty-right
+    display: none
+    position: relative
+    height: 100%
+
+  #panel-history-form
+    display: none
+    position: relative
+    height: 100%
+    form
+      width: 100%
+
+  #panel-stream-message-data, #stream-presence-data, #panel-full-channel-list, #panel-console-settings, #panel-pam-manager, #panel-history-explorer
     height: 100%
     position: relative
     box-sizing: border-box
 
   #panel-full-channel-list
     display: none
+    .panel-toolbar
+      background-color: #339
+      color: white
 
   #panel-console-settings
     display: none
 
   #panel-history-explorer
+    display: none
+
+  #panel-pam-manager
     display: none
 
   .data-list
@@ -314,3 +364,35 @@ input:focus::-webkit-input-placeholder
   .data-list
     bottom: $form-message-search-height + $panel-infobar-height
 
+#panel-full-channel-list
+  form
+    padding: 0.731rem
+    width: 100%
+    position: absolute
+    z-index: $z-data-panel + 1
+    bottom: 0px
+    margin: 0px
+    background: none repeat scroll 0% 0% #666
+    height: $form-message-search-height
+    .form-group
+      width: 100%
+      display: -webkit-flex
+      -webkit-flex-direction: row
+      display: flex
+      flex-direction: row
+      float: left
+      input
+        display: inline-block
+        flex-grow: 3
+        border-radius: 4px
+      input[type='text']
+        margin-right: 10px
+      div.checkbox
+        margin-top: 7px
+        margin-right: 10px
+        color: #fff
+      .btn
+        border-radius: 4px
+
+  .data-list
+    bottom: $form-add-channel-height

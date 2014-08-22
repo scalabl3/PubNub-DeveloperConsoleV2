@@ -119,6 +119,8 @@
 #nav-primary .nav-content ul.nav-pubnub-channels .channel a i:before {
   content: "\f10c";
   color: #66bb66; }
+#nav-primary .nav-content ul.nav-pubnub-channels .channel a + div {
+  display: none; }
 #nav-primary .nav-content ul.nav-pubnub-channels .subscribed a i:before {
   content: "\f192";
   color: #cccccc; }
@@ -133,9 +135,37 @@
   border-radius: 9px; }
   #nav-primary .nav-content ul.nav-pubnub-channels .watching a {
     color: white;
-    font-weight: bold; }
+    font-weight: bold;
+    padding-bottom: 2px; }
   #nav-primary .nav-content ul.nav-pubnub-channels .watching a i {
     position: relative; }
   #nav-primary .nav-content ul.nav-pubnub-channels .watching a i:before {
     content: "\f18e";
     color: #66bb66; }
+  #nav-primary .nav-content ul.nav-pubnub-channels .watching a + div {
+    display: block;
+    margin-left: 35px;
+    margin-bottom: 10px; }
+    #nav-primary .nav-content ul.nav-pubnub-channels .watching a + div i {
+      color: #666666;
+      margin-right: 5px;
+      cursor: pointer; }
+    #nav-primary .nav-content ul.nav-pubnub-channels .watching a + div i:hover {
+      color: #eeeeee;
+      margin-right: 5px; }
+    #nav-primary .nav-content ul.nav-pubnub-channels .watching a + div i.action-remove:hover {
+      color: #ff3333 !important;
+      margin-right: 5px; }
+  #nav-primary .nav-content ul.nav-pubnub-channels .watching a + i {
+    position: absolute;
+    left: 205px;
+    top: 0px;
+    line-height: 37px;
+    z-index: 900;
+    font-size: 16px;
+    cursor: pointer;
+    color: #666666;
+    display: block; }
+  #nav-primary .nav-content ul.nav-pubnub-channels .watching a + i:hover {
+    color: #9f0000;
+    display: block; }

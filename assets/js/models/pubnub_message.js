@@ -49,10 +49,8 @@ var Message = Backbone.Model.extend({
         timetoken: null,
         rendered: false,
         collapsed: false,
-        content: null
-    },
-    initialize: function() {
-
+        content: null,
+        displayIndex: null
     }
 });
 
@@ -63,12 +61,17 @@ var MessageView = Backbone.View.extend({
     classID: "View.Message [MessageView]",
     tagName: 'li',
     className: 'msg-item',
-    rawTemplate: '<div class="msg-item-container"><div class="msg-item-info"><div class="msg-item-identity" id="test">{{timestamp}}</div></div><div class="msg-item-content">{{{content}}}</div></div>',
+    rawTemplate: '<div class="msg-item-container">' +
+        '<div class="msg-item-info">' +
+        '<div class="msg-item-identity">{{timestamp}}{{#if displayIndex}} [{{displayIndex}}]{{/if}}</div>' +
+        '</div>' +
+        '<div class="msg-item-content">{{{content}}}</div></div>',
     compiledTemplate: null,
     renderContent: {
         timetoken: null,
         timestamp: null,
-        content: null
+        content: null,
+        displayIndex: null
     },
     initialize: function () {
         this.model.on('change', this.render, this);
@@ -89,6 +92,9 @@ var MessageView = Backbone.View.extend({
         this.renderContent.timetoken = this.model.get("timetoken");
         this.renderContent.timestamp = this.format_timetoken(this.model.get("timetoken"));
         this.renderContent.content = this.render_json(this.model.get("content"));
+        if (this.model.get("displayIndex")) {
+            this.renderContent.displayIndex = this.model.get("displayIndex").toString();
+        }
     },
     format_timetoken: function(tt) {
         var divisor = 10000000.0;

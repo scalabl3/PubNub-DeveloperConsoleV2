@@ -1,40 +1,40 @@
-#panel-stream-message-data ul.data-list li {
+#panel-stream-message-data ul.data-list li, #panel-history-explorer ul.data-list li {
   font-size: 10px; }
-  #panel-stream-message-data ul.data-list li menu {
+  #panel-stream-message-data ul.data-list li menu, #panel-history-explorer ul.data-list li menu {
     font-size: 10px; }
-  #panel-stream-message-data ul.data-list li a {
+  #panel-stream-message-data ul.data-list li a, #panel-history-explorer ul.data-list li a {
     font-size: 10px; }
-  #panel-stream-message-data ul.data-list li div.identity {
+  #panel-stream-message-data ul.data-list li div.identity, #panel-history-explorer ul.data-list li div.identity {
     font-size: 10px; }
-  #panel-stream-message-data ul.data-list li div.content {
+  #panel-stream-message-data ul.data-list li div.content, #panel-history-explorer ul.data-list li div.content {
     font-size: 10px; }
-#panel-stream-message-data .msg-item-container {
+#panel-stream-message-data .msg-item-container, #panel-history-explorer .msg-item-container {
   padding: 10px;
   border-bottom: 1px solid #eeeeee;
   -webkit-transition: all 0.5s linear;
   -moz-transition: all 0.5s linear;
   -o-transition: all 0.5s linear;
   transition: all 0.5s linear; }
-#panel-stream-message-data .msg-item-container:hover {
+#panel-stream-message-data .msg-item-container:hover, #panel-history-explorer .msg-item-container:hover {
   background-color: #555555;
   opacity: 1;
   border-color: #66afe9;
   outline: 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6); }
-  #panel-stream-message-data .msg-item-container:hover .msg-item-identity {
+  #panel-stream-message-data .msg-item-container:hover .msg-item-identity, #panel-history-explorer .msg-item-container:hover .msg-item-identity {
     color: #eeeeee; }
-  #panel-stream-message-data .msg-item-container:hover .msg-item-content {
+  #panel-stream-message-data .msg-item-container:hover .msg-item-content, #panel-history-explorer .msg-item-container:hover .msg-item-content {
     opacity: 1; }
-#panel-stream-message-data .msg-item-info .msg-item-identity {
+#panel-stream-message-data .msg-item-info .msg-item-identity, #panel-history-explorer .msg-item-info .msg-item-identity {
   font-family: Menlo, "Bitstream Vera Sans Mono", "DejaVu Sans Mono", Monaco, Consolas, monospace;
   font-size: 12px;
   color: #dddddd;
   float: right;
   white-space: nowrap; }
-#panel-stream-message-data .msg-item-content {
+#panel-stream-message-data .msg-item-content, #panel-history-explorer .msg-item-content {
   opacity: 0.75; }
-  #panel-stream-message-data .msg-item-content pre {
+  #panel-stream-message-data .msg-item-content pre, #panel-history-explorer .msg-item-content pre {
     outline: 0.5px solid #cccccc;
     padding: 10px 20px;
     margin: 5px;
@@ -42,14 +42,14 @@
     font-size: 11px;
     line-height: 1.5;
     margin: 25px; }
-  #panel-stream-message-data .msg-item-content .string {
+  #panel-stream-message-data .msg-item-content .string, #panel-history-explorer .msg-item-content .string {
     color: green; }
-  #panel-stream-message-data .msg-item-content .number {
+  #panel-stream-message-data .msg-item-content .number, #panel-history-explorer .msg-item-content .number {
     color: blue; }
-  #panel-stream-message-data .msg-item-content .boolean {
+  #panel-stream-message-data .msg-item-content .boolean, #panel-history-explorer .msg-item-content .boolean {
     color: firebrick; }
-  #panel-stream-message-data .msg-item-content .null {
+  #panel-stream-message-data .msg-item-content .null, #panel-history-explorer .msg-item-content .null {
     color: gray; }
-  #panel-stream-message-data .msg-item-content .key {
+  #panel-stream-message-data .msg-item-content .key, #panel-history-explorer .msg-item-content .key {
     color: #333333;
     font-weight: bold; }

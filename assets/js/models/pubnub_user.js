@@ -189,7 +189,7 @@ var User = Backbone.Model.extend({
         });
 
         var callback = this.get("successCallback");
-        if (callback && typeof(callback) == "function") {
+        if (_.isFunction(callback)) {
             callback();
         }
     }

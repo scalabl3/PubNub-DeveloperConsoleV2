@@ -65,11 +65,10 @@ pubnubAppListView.on( "selectionChanged", function(newModel, oldModel) {
         var klist = selectedApp.get("appKeys");
         pubnubKeysListView.assign_collection(klist);
 
-        DC.currentSelection.app = selectedApp.get("name");
-        DC.saveCurrentSelection();
+        DC.LocalStore.app(selectedApp.get("name"));
     }
 
-    DC.activateStreamMessageData();
+    DC.App.activateStreamMessageData();
 });
 
 // Render the App List
@@ -130,6 +129,7 @@ var PubnubKeysListView = Backbone.CollectionView.extend({
         pubnubFullChannelList.reset();
         pubnubChannelListView.clear_collection();
         pubnubMessageListView.clear_collection();
+        pubnubHistoryListView.clear_collection();
         pubnubPresenceListView.clear_collection();
     }
 
@@ -147,9 +147,6 @@ pubnubKeysListView.on( "selectionChanged", function() {
         // Connect selected AppKeys to Pubnub
         selectedKeys.connect();
 
-        // TEMPORARY, remove this later
-        selectedKeys.add_channel("devconsole");
-
         // Update the list of Channels for this selected AppKeys
         var clist = selectedKeys.get("channels");
 
@@ -166,16 +163,18 @@ pubnubKeysListView.on( "selectionChanged", function() {
 //            pubnubFullChannelList.retrieve_channels(selectedKeys.get("subkey"));
 //        }, 5000);
 
-        $("#link-view-all-channels").removeClass("hidden");
+        setTimeout(function(){
+            $("#link-view-all-channels").removeClass("hidden");
+        }, 100);
 
-        DC.currentSelection.keys = selectedKeys.get("name");
-        DC.saveCurrentSelection();
+        DC.LocalStore.app_keys(selectedKeys.get("name"));
     }
     else {
+        console.log("why here");
         $("#link-view-all-channels").addClass("hidden");
     }
 
-    DC.activateStreamMessageData();
+    DC.App.activateStreamMessageData();
 });
 
 
@@ -202,6 +201,7 @@ var PubnubChannelListView = Backbone.CollectionView.extend({
         this.clear_dependent_collections();
         this.setOption("collection", c);
         if (c != null) {
+            this.collection.on('sort', this.render, this);
             this.render();
             this._reset_css();
         }
@@ -219,16 +219,22 @@ var PubnubChannelListView = Backbone.CollectionView.extend({
         }
     },
     // Unwatch channels when switching App or AppKeys
-    unwatch_channels: function() {
+    unwatch_channels: function(unselect) {
       if (this.collection) {
           this.collection.forEach(function(m){
               m.unwatch();
           });
       }
+      if (unselect) {
+          if (this.collection || this.getSelectedModel()) {
+              this.setSelectedModel(null);
+          }
+      }
     },
     // Empty collections that depend on what channel is selected (MessageList and PresenceList)
     clear_dependent_collections: function() {
         pubnubMessageListView.clear_collection();
+        pubnubHistoryListView.clear_collection();
         pubnubPresenceListView.clear_collection();
     }
 });
@@ -245,12 +251,12 @@ pubnubChannelListView.on( "selectionChanged", function(newModel, oldModel) {
     if (selectedChannel) {
 
         // Unwatch the previously watch channel (if there is one)
-        if (oldModel.length > 0 && !oldModel[0].get("isViewChannels")) {
+        if (oldModel.length > 0 && !oldModel[0].get("isNavLink")) {
             oldModel[0].unwatch();
         }
 
-        if (selectedChannel.get("isViewChannels")) {
-            DC.activateFullChannelList();
+        if (selectedChannel.get("isNavLink")) {
+            DC.App.activateFullChannelList();
             pubnubFullChannelList.retrieve_channels();
             pubnubFullChannelListView.reset_selection();
         }
@@ -274,6 +280,11 @@ pubnubChannelListView.on( "selectionChanged", function(newModel, oldModel) {
                 collection: mlist
             }).render();
 
+            var hlist = selectedChannel.get("history");
+            pubnubHistoryListView = new PubnubHistoryListView({
+                collection: hlist
+            }).render();
+
             // Clear out PresenceList and assign collection by creating instance
             // (Marionette is different than CollectionView, reassigning collection doesn't reset listenTo events)
             var plist = selectedChannel.get("presence");
@@ -282,12 +293,11 @@ pubnubChannelListView.on( "selectionChanged", function(newModel, oldModel) {
                 collection: plist
             }).render();
 
-            DC.activateStreamMessageData();
+            DC.App.activateStreamMessageData();
             //DC.resumeDataStreamScroll();
         }
 
-        DC.currentSelection.channel = selectedChannel.get("name");
-        DC.saveCurrentSelection();
+        DC.LocalStore.channel(selectedChannel.get("name"));
     }
 
 });
@@ -330,6 +340,32 @@ var PubnubMessageListView = Backbone.Marionette.CollectionView.extend({
 // Create instance of PubnubMessageListView
 var pubnubMessageListView = new PubnubMessageListView();
 
+
+// **************************************************************
+// Create HistoryList Collection View
+// **************************************************************
+var PubnubHistoryListView = Backbone.Marionette.CollectionView.extend({
+    classID: "View.MessageList [MessageListView]",
+    el: function() {
+        // Since we destroy and recreate this view (more common with the Marionette version), conditionally re-add the binding element
+        if (!$("#pubnub-history-list").length) {
+            $("#panel-history-explorer").append('<ul id="pubnub-history-list" class="data-list">');
+        }
+        return $("ul#pubnub-history-list");
+    },
+    childView: MessageView,
+    initialize: function() {
+        // Clear out any sample data
+        this.$el.find("li.msg-item").remove();
+    },
+    clear_collection: function() {
+        this.destroy();
+    }
+
+});
+
+// Create instance of PubnubMessageListView
+var pubnubHistoryListView = new PubnubHistoryListView();
 
 
 
@@ -418,5 +454,6 @@ pubnubFullChannelListView.on( "selectionChanged", function(newModel, oldModel) {
     if (selectedChannel) {
         var selectedKeys = pubnubKeysListView.getSelectedModel();
         selectedKeys.add_channel(selectedChannel.get("name"), true);
+        selectedChannel.set("subscribed", true);
     }
 });

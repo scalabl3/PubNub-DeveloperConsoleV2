@@ -146,6 +146,9 @@ $nav-hover-selected-border-radius: 9px
         a i:before
           content: "\f10c"
           color: #6b6
+        a + div
+          display: none
+
       .subscribed a i:before
         content: "\f192"
         color: #ccc
@@ -161,9 +164,37 @@ $nav-hover-selected-border-radius: 9px
         a
           color: #fff
           font-weight: bold
+          padding-bottom: 2px
         a i
           position: relative
         a i:before
           content: "\f18e"
           color: #6b6
+        a + div
+          display: block
+          margin-left: 35px
+          margin-bottom: 10px
+          i
+            color: #666
+            margin-right: 5px
+            cursor: pointer
+          i:hover
+            color: #eee
+            margin-right: 5px
+          i.action-remove:hover
+            color: #f33 !important
+            margin-right: 5px
+        a + i
+          position: absolute
+          left: $nav-primary-width - ($nav-primary-content-padding * 2) - 25px
+          top: 0px
+          line-height: 37px
+          z-index: 900
+          font-size: 16px
+          cursor: pointer
+          color: #666
+          display: block
+        a + i:hover // right side gear icon
+          color: #9f0000
+          display: block
 

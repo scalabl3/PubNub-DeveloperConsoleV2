@@ -48,6 +48,7 @@ var App = Backbone.Model.extend({
         var klist = this.get("appKeys");
 
         var k = new Keys({
+            app: this,
             appName: this.get("name"),
             name: name,
             pubkey: pkey,
@@ -98,7 +99,7 @@ var AppView = Backbone.View.extend({
         }
     },
     render: function() {
-        //console.log("AppView render");
+        debuglog.by("Render App - ", this.model.get("name"));
         var attributes = this.model.toJSON();
         //var compiledTemplate = Handlebars.compile(this.rawTemplate);
         this.$el.html(this.compiledTemplate(attributes));
@@ -121,6 +122,11 @@ var AppList = Backbone.Collection.extend({
     selectedAppIndex: 0,
     initialize: function(){
         //this.on('change:active', this.changeActive, this);
+    },
+    addDemoAccount: function() {
+        var demoAccount = new App({ name: "Demo" });
+        demoAccount.addAppKey("Demo", "demo", "demo");
+        pubnubAppList.unshift(demoAccount);
     }
 });
 

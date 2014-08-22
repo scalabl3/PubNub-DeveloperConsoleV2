@@ -5,6 +5,7 @@
         'cw:white:darkcyan'];
     // if string param, prepend it in all logs. if not, the usual
     // color should work. Check if first param is string, and add it.
+
     function fmtType(arg) {
         if (typeof arg == 'string') {
             return '%s';
@@ -101,3 +102,5 @@
 var csslog = DC.log.withPrefix("\tCSS:");
 var jslog = DC.log.withPrefix("\tJS:");
 var modellog = DC.log.withPrefix("\tModel:");
+var debuglog = DC.log.withPrefix("\tDEBUG:");
+debuglog = DC.log.mute();

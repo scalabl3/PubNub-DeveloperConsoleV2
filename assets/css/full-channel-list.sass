@@ -13,8 +13,6 @@ table#full-channel-list
 
 
 #panel-full-channel-list
-  ul
-    clear: both
   div.list-header
     padding: 10px 10px
     width: 100%
@@ -22,44 +20,56 @@ table#full-channel-list
     display: block
     box-sizing: border-box
     div
+      float: left
       span
         cursor: pointer
       span.sortedby
         color: #428BCA
         i:before
           content: "\f0da"
+        i
+          padding-right: 2px
+    div.subscribed
+      width: 5%
     div.name
       text-transform: capitalize
       font-weight: bold
-      width: 90%
-      float: left
+      width: 85%
     div.occupants
       text-transform: capitalize
       font-weight: bold
       width: 10%
-      float: left
       text-align: right
-
-#full-channel-list
-  width: 100%
-  list-style: none
-  padding: 0
-  li
-    padding: 10px 10px
+  ul
+    clear: both
     width: 100%
-    border-top: 1px solid
-    border-color: rgba(255, 255, 255, 0.2)
-    cursor: pointer
-    display: block
-    div
+    list-style: none
+    padding: 0
+    li
+      padding: 10px 10px
       width: 100%
-      float: left
-      padding: 2px 4px
-    div.name
-      width: 90%
-    div.occupants
-      width: 10%
-      text-align: right
-  li:hover
-    background-color: #f6f6f6
+      border-top: 1px solid
+      border-color: rgba(255, 255, 255, 0.2)
+      cursor: pointer
+      display: block
+      div
+        float: left
+      div.name
+        width: 85%
+      div.subscribed
+        width: 5%
+      div.occupants
+        width: 10%
+        text-align: right
+    li:hover
+      background-color: #f6f6f6
+    li.subscribed
+      background: #f6f9f6
+      div
+        font-weight: bold
+    li.cleartext
+      color: rgba(255,255,255,0.0)
+
+
+
 
