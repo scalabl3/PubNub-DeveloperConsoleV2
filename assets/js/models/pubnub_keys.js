@@ -234,7 +234,7 @@ var Keys = Backbone.Model.extend({
 
                                 if (history.length >= totalCount) {
                                     return completeCallback(history);
-                                }
+                                } 
                                 //console.log(totalCount - history.length);
                                 if (totalCount - history.length > 100) {
                                     params.count = 100;
