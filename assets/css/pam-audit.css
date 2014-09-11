@@ -1,0 +1,28 @@
+#panel-pam-audit ul {
+  margin: 0;
+  padding: 0; }
+  #panel-pam-audit ul li {
+    padding: 10px 10px 20px 20px;
+    border-bottom: 1px solid #eeeeee; }
+    #panel-pam-audit ul li div {
+      font-size: 12px; }
+#panel-pam-audit .item-container {
+  margin-top: -5px; }
+#panel-pam-audit .item-info, #panel-pam-audit .item-permissions {
+  margin-bottom: 5px; }
+#panel-pam-audit .type-label, #panel-pam-audit .info-label, #panel-pam-audit .info-name, #panel-pam-audit .type-name {
+  float: left; }
+#panel-pam-audit .info-label {
+  min-width: 70px;
+  width: 70px;
+  font-weight: bold; }
+#panel-pam-audit .type-label {
+  padding-left: 70px;
+  width: 20px; }
+#panel-pam-audit .type-name {
+  padding-left: 20px; }
+#panel-pam-audit .item-permissions.open * {
+  color: darkgreen;
+  font-weight: bold; }
+#panel-pam-audit .item-permissions.blocked {
+  color: maroon; }

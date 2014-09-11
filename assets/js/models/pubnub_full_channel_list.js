@@ -119,7 +119,7 @@ var FullChannelList = Backbone.Collection.extend({
 
                     var ch = self.findWhere({name: c});
 
-                    // If channel listed already, update occupants only, otherwise add it to list
+                    // If current_channel listed already, update occupants only, otherwise add it to list
                     if (ch) {
                         ch.set("occupants", v.occupancy);
                     }

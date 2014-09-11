@@ -88,22 +88,22 @@
     </nav>
 </div>
 <div id="content-flow">
-    <div id="data-panel">
+    <div id="data-panels">
 
 
+        <!-- Left Side Panels -->
 
-
-        <div id="panel-full-channel-list">
+        <div id="panel-full-channel-list" class="panel-left">
             <div class="panel-toolbar">
                 <div class="panel-toolbar-title">Channel List <span id="channel-count"></span></div>
             </div>
-            <form role="form" class="form-inline">
+            <form id="form-add-channel" role="form" class="form-inline">
                 <div class="form-group">
                     <label class="sr-only" for="add-channel-name">Add Channel</label>
                     <input type="text" class="form-control" id="add-channel-name" placeholder="Enter channel name">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" checked="checked"> Subscribe
+                            <input id="add-channel-subscribe" type="checkbox" checked="checked"> Subscribe
                         </label>
                     </div>
                     <button type="submit" class="btn btn-default">Add</button>
@@ -122,53 +122,219 @@
 
 
 
-        <div id="panel-history-explorer">
+        <div id="panel-history-explorer" class="panel-left">
             <div class="panel-toolbar">
                 <div class="panel-toolbar-title">History Messages</div>
             </div>
-            <form role="form">
-
-            </form>
             <ul id="pubnub-history-list" class="data-list"></ul>
         </div>
 
 
 
 
-        <div id="panel-console-settings">
+        <div id="panel-console-settings" class="panel-left">
             <div class="panel-toolbar">
                 <div class="panel-toolbar-title">Console Settings</div>
             </div>
-            <div id="pubnub-console-settings" class="data-list"></div>
-        </div>
+            <div id="pubnub-console-settings" class="data-list">
 
+                <div class="section">
+                    <div class="title">PubNub Origin</div>
+                    <p>If you have been given a different origin to use for PubNub, you may change it here.</p>
+                    <input type="text" class="form-control" id="pubnub-origin" value="pubsub.pubnub.com"> <br />
+                    <button class="btn btn-default btn-sm">Save</button> <button class="btn btn-default btn-sm">Restore Default</button>
+                </div>
 
+                <div class="section">
+                    <div class="title">Developer Console AuthKey</div>
+                    <p class="description">The AuthKey that this Console should use for subscribe/publish.</p>
+                    <form role="form" class="form clearfix">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="pubnub-authkey">AuthKey</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="pubnub-authkey" placeholder="auth key">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
 
-
-        <div id="panel-pam-manager">
-            <div class="panel-toolbar">
-                <div class="panel-toolbar-title">PAM Manager</div>
+                <div class="section">
+                    <div class="title">Reset Local Storage</div>
+                    <p>Emptying local storage will remove auto-saved lists of Apps/AppKeys/Channels. It also removes any manually
+                            added Apps/AppKeys and they will need to be re-added if you refresh or reload the browser.
+                    </p>
+                    <br />
+                    <button class="btn btn-default btn-sm">Reset/Empty LocalStorage</button>
+                </div>
             </div>
-            <div id="pubnub-pam-manager" class="data-list"></div>
         </div>
 
 
 
 
-        <div id="panel-stream-message-data">
-            <div class="form-message-data-search">
+        <div id="panel-pam-manager" class="panel-left">
+            <div class="panel-toolbar">
+                <div class="panel-toolbar-title">PAM Manager <span class="channel"></span></div>
+            </div>
+            <div class="data-list">
+                <div class="pam-disabled section clearfix">
+                    <div class="title">PubNub Access Manager (PAM) is not enabled for this AppKey set.</div>
+                    <p class="description">To enable this, please visit <a href="https://admin.pubnub.com/">admin.pubnub.com</a> and enable Access Manager.</p>
+                </div>
+
+                <div class="pam-enabled section clearfix">
+
+                    <div class="title">Global Read & Write Access for AppKey</div>
+                    <p class="description">Global permission allows for subscribing and/or publishing to <em>any</em> channel that uses these AppKeys.</p>
+
+                    <form id="form-pam-update-global" role="form" class="form clearfix">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="pubnub-authkey">TTL (minutes)</label>
+                            <div class="col-sm-2">
+                                <input type="number" class="form-control" id="pubnub-authkey-ttl" value="0" min="0" max="525600">
+                                <strong>0</strong> = permanent, <strong>1440</strong> = 24 hours, <strong>525600</strong> = max
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input id="pubnub-pam-global-read" type="checkbox"> Read
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input id="pubnub-pam-global-write" type="checkbox"> Write
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default">Update</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <p class="bg-warning text-warning"><strong>Important Note</strong><br /> Enabling Read/Write at the Global AppKeys context
+                        allows subscribing/publishing on every channel using these Keys, but <em>does not allow access</em> to <em>Presence</em>
+                        for every channel.  Presence read/write must be specified at the Channel level.
+                    </p>
+                </div>
+                <div class="pam-enabled section clearfix">
+                    <div class="title">Add AuthKey with Permissions to Channel</div>
+                    <form id="form-pam-addkey" role="form" class="form form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="pubnub-authkey">Channel</label>
+                            <div class="col-sm-10">
+                                <input id="pubnub-pam-channel-name" type="text" class="form-control" placeholder="channel name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="pubnub-authkey">AuthKey</label>
+                            <div class="col-sm-10">
+                                <input id="pubnub-pam-channel-authkey" type="text" class="form-control" placeholder="auth key">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="pubnub-authkey">TTL (minutes)</label>
+                            <div class="col-sm-2">
+                                <input id="pubnub-pam-channel-ttl" type="number" class="form-control" value="0" min="0" max="525600">
+                                <strong>0</strong> = permanent, <strong>1440</strong> = 24 hours, <strong>525600</strong> = max
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input id="pubnub-pam-channel-read" type="checkbox"> Read
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input id="pubnub-pam-channel-write" type="checkbox"> Write
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input id="pubnub-pam-channel-presence" type="checkbox" checked="checked"> Also Apply this to Channel Presence (<strong>recommended</strong>)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default">Add</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="pam-enabled section clearfix">
+                    <div class="title">Developer Console AuthKey</div>
+                    <p class="description">The AuthKey that this Console should use for subscribe/publish. A specific key can be used to allow access to this console.
+                        This can also be changed in Console Settings (gear icon at bottom of left navigation).</p>
+                    <form id="form-pam-console-authkey" role="form" class="form clearfix">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="pubnub-authkey">AuthKey</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="pubnub-console-authkey" placeholder="auth key">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input id="pubnub-console-autogrant-pam" type="checkbox" checked="checked"> Auto-Grant Read/Write Access to Channels for 24 hours
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default">Update</button> <button type="button" id="btn-generate-authkey" class="btn btn-default">Generate</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <ul id="pubnub-pam-authkeys" class="pam-enabled"></ul>
+
+            </div>
+        </div>
+
+
+
+
+        <div id="panel-stream-message-data" class="panel-left">
+            <form id="form-data-publish" role="form" class="form-message-data-search">
                 <div class="form-group">
                     <input type="text" class="form-control" id="publish-message" placeholder="Send Message to Channel (JSON, Plain Text, Numbers)" />
                     <button id="btn-publish" class="btn btn-small btn-default"><span>Send</span></button>
                 </div>
 
-            </div>
+            </form>
             <div class="panel-toolbar">
                 <div class="panel-toolbar-title">Data Stream</div>
             </div>
             <div id="panel-stream-message-data-infobar" class="panel-infobar bg-success">
-                <div class="autoscroll-play"><button class="btn btn-default btn-xs"><i class="fa fa-play"></i>&nbsp;&nbsp;<span> <strong>AutoScroll On</strong></span></button></div>
-                <div class="autoscroll-pause hidden"><button class="btn btn-default btn-xs"><i class="fa fa-pause"></i>&nbsp;&nbsp;<span> <strong>AutoScroll Paused</strong></span></button></div>
+                <div class="autoscroll-play"><button class="btn btn-default btn-xs"><i class="fa fa-pause"></i>&nbsp;&nbsp;<span> <strong>AutoScroll On</strong></span></button></div>
+                <div class="autoscroll-pause hidden"><button class="btn btn-default btn-xs"><i class="fa fa-play"></i>&nbsp;&nbsp;<span> <strong>AutoScroll Paused</strong></span></button></div>
                 <div class="autoscroll-new-count hidden"><strong><span id="panel-infobar-new"></span> new messages</strong></div>
                 <div><span id="panel-infobar-display"></span> messages displayed</div>
                 <div><span id="panel-infobar-total"></span> total messages received</div>
@@ -180,7 +346,13 @@
 
 
 
-    <div id="presence-panel" class="hidden-xs">
+
+
+
+
+    <!-- Right Side Panels -->
+
+    <div id="panel-presence" class="hidden-xs panel-right">
         <div id="stream-presence-data">
             <div class="panel-toolbar">
                 <div class="panel-toolbar-content">
@@ -192,7 +364,7 @@
         </div>
     </div>
 
-    <div id="panel-empty-right" class="hidden-xs">
+    <div id="panel-empty" class="hidden-xs panel-right">
         <div class="panel-toolbar">
             <div class="panel-toolbar-content">
                 <div class="panel-toolbar-title">&nbsp;</div>
@@ -200,7 +372,87 @@
         </div>
     </div>
 
-    <div id="panel-history-form">
+
+
+    <div id="panel-pam-audit" class="hidden-xs panel-right">
+        <div class="panel-toolbar">
+            <div class="panel-toolbar-content">
+                <div class="panel-toolbar-title">PAM Audit</div>
+                <div class="pull-right">
+                    <button id="btn-pam-audit-reload" type="button" class="btn btn-link" style="border: 0;display: inline-block;padding: 0;margin-top: -2px;margin-right: 5px"><i class="fa fa-repeat"></i></button>
+                    <i id="pam-audit-updating" class="fa fa-refresh fa-spin" style="display: inline-block"></i>
+                </div>
+            </div>
+        </div>
+        <div class="data-list">
+            <ul id="pubnub-pam-bychannel">
+                <li class="pam-item clearfix">
+                    <div class="item-container">
+                        <div class="item-info clearfix">
+                            <div class="info-label">Channel</div>
+                            <div class="info-name">devconsole</div>
+                        </div>
+                        <div class="item-info clearfix">
+                            <div class="info-label">AuthKey</div>
+                            <div class="info-name">asdin292nfnsl-sifiwunf-2393</div>
+                        </div>
+                        <div class="item-permissions clearfix open">
+                            <div class="type-label"><i class="fa fa-clock-o"></i></div>
+                            <div class="type-name">TTL 5 mins</div>
+                        </div>
+                        <div class="item-permissions clearfix open">
+                            <div class="type-label"><i class="fa fa-check"></i></div>
+                            <div class="type-name">Read</div>
+                        </div>
+                        <div class="item-permissions clearfix blocked">
+                            <div class="type-label"><i class="fa fa-times"></i></div>
+                            <div class="type-name">Write</div>
+                        </div>
+                        <div class="item-permissions clearfix blocked">
+                            <div class="type-label"><i class="fa fa-times"></i></div>
+                            <div class="type-name">Presence (devconsole-pnpres)</div>
+                        </div>
+                    </div>
+                </li>
+                <li class="clearfix">
+                    <div class="item-container">
+                        <div class="item-info clearfix">
+                            <div class="info-label">Channel</div>
+                            <div class="info-name">devconsole</div>
+                        </div>
+                        <div class="item-info clearfix">
+                            <div class="info-label">AuthKey</div>
+                            <div class="info-name">asdin292nfnsl-sifiwunf-2393</div>
+                        </div>
+                        <div class="item-permissions clearfix open">
+                            <div class="type-label"><i class="fa fa-clock-o"></i></div>
+                            <div class="type-name">TTL 5 mins</div>
+                        </div>
+                        <div class="item-permissions clearfix open">
+                            <div class="type-label"><i class="fa fa-check"></i></div>
+                            <div class="type-name">Read</div>
+                        </div>
+                        <div class="item-permissions clearfix blocked">
+                            <div class="type-label"><i class="fa fa-times"></i></div>
+                            <div class="type-name">Write</div>
+                        </div>
+                        <div class="item-permissions clearfix blocked">
+                            <div class="type-label"><i class="fa fa-times"></i></div>
+                            <div class="type-name">Presence (devconsole-pnpres)</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <ul id="pubnub-pam-byauthkey">
+
+            </ul>
+        </div>
+
+    </div>
+
+
+
+    <div id="panel-history-form" class="hidden-xs panel-right">
         <div class="panel-toolbar">
             <div class="panel-toolbar-content">
                 <div class="panel-toolbar-title">Explore History</div>
@@ -213,7 +465,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="history-recent-count">How Many?</label>
                         <div class="col-sm-8">
-                            <input type="number" id="history-recent-count" value="201">
+                            <input type="number" id="history-recent-count" value="3">
                         </div>
                     </div>
                     <div class="form-group">
@@ -239,11 +491,13 @@
             </form>
         </div>
     </div>
-
 </div>
 
 
-<!-- Modal -->
+
+
+
+<!-- Modals -->
 <div class="modal fade" id="modal-pubnub-login" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

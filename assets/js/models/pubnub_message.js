@@ -14,7 +14,7 @@
 <li class="msg-item">
     <div class="msg-item-container">
         <div class="msg-item-info">
-            <div class="msg-item-identity" id="test"></div>
+            <div class="msg-item-identity"></div>
         </div>
         <div class="msg-item-content"><pre>{
             <span class="key">"name":</span> <span class="string">"Scalabl3"</span>,
@@ -45,12 +45,15 @@
 // **************************************************************
 var Message = Backbone.Model.extend({
     classID: "Model.Message [Message]",
-    defaults: {
-        timetoken: null,
-        rendered: false,
-        collapsed: false,
-        content: null,
-        displayIndex: null
+    defaults: function(){
+        return {
+            timetoken: null,
+            rendered: false,
+            collapsed: false,
+            content: null,
+            displayIndex: null,
+            isHistory: false
+        };
     }
 });
 
@@ -67,34 +70,39 @@ var MessageView = Backbone.View.extend({
         '</div>' +
         '<div class="msg-item-content">{{{content}}}</div></div>',
     compiledTemplate: null,
-    renderContent: {
-        timetoken: null,
-        timestamp: null,
-        content: null,
-        displayIndex: null
-    },
     initialize: function () {
-        this.model.on('change', this.render, this);
+        //this.model.on('change', this.render, this);
         this.model.on('hide', this.remove, this);
         this.compiledTemplate = Handlebars.compile(this.rawTemplate);
     },
     render: function() {
         if (this.model.get("content")) {
-            this.create_render_content();
-            this.$el.html(this.compiledTemplate(this.renderContent));
-            this.$el.find("div.msg-item-container").click(function(){
-                DC.pauseDataStreamScroll();
-            });
+            //console.log(this.model.attributes);
+            if (!this.model.get("rendered")) {
+                this.$el.html(this.compiledTemplate(this.create_render_content()));
+            }
+            if (!this.model.get("isHistory")) {
+                this.$el.find("div.msg-item-container").click(function(){
+                    DC.pauseDataStreamScroll();
+                });
+            }
             this.model.set("rendered", true);
         }
     },
     create_render_content: function() {
-        this.renderContent.timetoken = this.model.get("timetoken");
-        this.renderContent.timestamp = this.format_timetoken(this.model.get("timetoken"));
-        this.renderContent.content = this.render_json(this.model.get("content"));
+        var renderContent = {
+            timetoken: null,
+            timestamp: null,
+            content: null,
+            displayIndex: null
+        };
+        renderContent.timetoken = this.model.get("timetoken");
+        renderContent.timestamp = this.format_timetoken(this.model.get("timetoken"));
+        renderContent.content = this.render_json(this.model.get("content"));
         if (this.model.get("displayIndex")) {
-            this.renderContent.displayIndex = this.model.get("displayIndex").toString();
+            renderContent.displayIndex = this.model.get("displayIndex").toString();
         }
+        return renderContent;
     },
     format_timetoken: function(tt) {
         var divisor = 10000000.0;

@@ -16,7 +16,9 @@ var User = Backbone.Model.extend({
         loginComplete: false,
         successCallback: null,
         errorCallback: null,
-        localStorage: null
+        localStorage: null,
+        consoleAuthKey: null,
+        autoGrantPAM: true
     },
     initialize: function(){
     },
@@ -50,7 +52,7 @@ var User = Backbone.Model.extend({
             error: function(err) {
                 console.log("PUBNUB: account - Error login unsuccessful");
                 console.log(err);
-                var callback = this.get("errorCallback");
+                var callback = model.get("errorCallback");
                 if (callback && typeof(callback) == "function") {
                     callback(err);
                 }
@@ -80,7 +82,7 @@ var User = Backbone.Model.extend({
                 error: function (err) {
                     console.log("PUBNUB: account - Error retrieving apps");
                     console.log(err);
-                    var callback = this.get("errorCallback");
+                    var callback = model.get("errorCallback");
                     if (callback && typeof(callback) == "function") {
                         callback(err);
                     }
@@ -109,18 +111,21 @@ var User = Backbone.Model.extend({
                     url: "https://admin.pubnub.com/api/keys?app_id=" + v.id.toString() + "&token=" + model.get("token"),
                     success: function (data) {
                         $.each(data.result, function (j, w) {
+                            //console.log(w);
                             appkeys[i][j] = {
                                 name: (w.properties.name ? w.properties.name : "Sandbox"),
                                 pkey: w.publish_key,
                                 skey: w.subscribe_key,
                                 secret: w.secret_key,
                                 enabled: w.status === 1,
-                                hasPresence: checkValue(w.properties.presence, 'int', 1),
-                                hasHistory: checkValue(w.properties.history, 'int', 1),
-                                hasPAM: checkValue(w.properties.uls, 'int', 1),
-                                hasMultiplex: checkValue(w.properties.multiplexing, 'int', 1),
-                                hasAnalytics: checkValue(w.properties.realtime_analytics, 'int', 1),
-                                hasApplePush: checkValue(w.properties.apns, 'int', 1)
+                                features: {
+                                    hasPresence: DC.App.checkValue(w.properties.presence, 'int', 1),
+                                    hasHistory: DC.App.checkValue(w.properties.history, 'int', 1),
+                                    hasPAM: DC.App.checkValue(w.properties.uls, 'int', 1),
+                                    hasMultiplex: DC.App.checkValue(w.properties.multiplexing, 'int', 1),
+                                    hasAnalytics: DC.App.checkValue(w.properties.realtime_analytics, 'int', 1),
+                                    hasApplePush: DC.App.checkValue(w.properties.apns, 'int', 1)
+                                }
                             };
                         });
                     },
@@ -128,7 +133,7 @@ var User = Backbone.Model.extend({
                         console.log("PUBNUB: account - Error retrieving app keys");
                         model.set("successKeys", false);
                         console.log(err);
-                        var callback = this.get("errorCallback");
+                        var callback = model.get("errorCallback");
                         if (callback && typeof(callback) == "function") {
                             callback(err);
                         }
@@ -182,8 +187,8 @@ var User = Backbone.Model.extend({
             var app = new App({ name: v.name, pnID: v.id });
             //console.log(i, appkeys[i]);
             $.each(appkeys[i], function(j,w){
-                //console.log(w);
-                app.addAppKey(w.name, w.pkey, w.skey, w.secret);
+                //console.log(w.name, w.features);
+                app.addAppKey(w.name, w.pkey, w.skey, w.secret, w.features);
             });
             pubnubAppList.add(app);
         });

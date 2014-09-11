@@ -40,8 +40,13 @@ head.load({js_consolelog: "assets/js/console_logging.js"}, function () {
         });
 
         head.load({ js_pubnub: "//cdn.pubnub.com/pubnub.js"}, function () {
-            jslog.gw("PubNub 3.6.6 SDK loaded");
+            jslog.gw("PubNub 3.6.7 SDK loaded");
         });
+
+        head.load({ js_pubnub_crypto: "//cdn.pubnub.com/pubnub-crypto.min.js"}, function () {
+            jslog.gw("PubNub 3.6.7 Crypto SDK loaded");
+        });
+
 
         head.load({ js_extensions: "assets/js/extensions.js"}, function () {
             jslog.gw("Prototype Extensions loaded");

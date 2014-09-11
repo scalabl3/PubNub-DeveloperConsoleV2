@@ -7,22 +7,6 @@ Storage.prototype.getObject = function(key) {
     return value && JSON.parse(value);
 };
 
-window.checkValue = function (x, type, value) {
-    if (typeof x === 'undefined') {
-        return false;
-    }
-    if (type === 'int') {
-        try {
-            y = parseInt(x);
-        }
-        catch (e) {
-            return false;
-        }
-
-        return y === value;
-    }
-};
-
 JSON.deepCopy = function(o) {
     return JSON.parse(JSON.stringify(o));
 };
@@ -30,3 +14,9 @@ JSON.deepCopy = function(o) {
 console.json = function(d) {
     console.log(JSON.stringify(d, true, 2));
 };
+
+if (typeof String.prototype.endsWith !== 'function') {
+    String.prototype.endsWith = function(suffix) {
+        return this.indexOf(suffix, this.length - suffix.length) !== -1;
+    };
+}

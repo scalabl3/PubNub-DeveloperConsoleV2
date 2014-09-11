@@ -127,36 +127,34 @@
 #nav-primary .nav-content ul.nav-pubnub-channels .subscribed a {
   color: #cccccc; }
 #nav-primary .nav-content ul.nav-pubnub-channels .unsubscribed a i:before {
+  content: "\f10c";
   color: #555555; }
 #nav-primary .nav-content ul.nav-pubnub-channels .unsubscribed a {
   color: #555555; }
-#nav-primary .nav-content ul.nav-pubnub-channels .watching {
+#nav-primary .nav-content ul.nav-pubnub-channels .selected {
   background: #222222;
   border-radius: 9px; }
-  #nav-primary .nav-content ul.nav-pubnub-channels .watching a {
+  #nav-primary .nav-content ul.nav-pubnub-channels .selected a {
     color: white;
     font-weight: bold;
     padding-bottom: 2px; }
-  #nav-primary .nav-content ul.nav-pubnub-channels .watching a i {
+  #nav-primary .nav-content ul.nav-pubnub-channels .selected a i {
     position: relative; }
-  #nav-primary .nav-content ul.nav-pubnub-channels .watching a i:before {
-    content: "\f18e";
-    color: #66bb66; }
-  #nav-primary .nav-content ul.nav-pubnub-channels .watching a + div {
+  #nav-primary .nav-content ul.nav-pubnub-channels .selected a + div {
     display: block;
     margin-left: 35px;
     margin-bottom: 10px; }
-    #nav-primary .nav-content ul.nav-pubnub-channels .watching a + div i {
+    #nav-primary .nav-content ul.nav-pubnub-channels .selected a + div i {
       color: #666666;
       margin-right: 5px;
       cursor: pointer; }
-    #nav-primary .nav-content ul.nav-pubnub-channels .watching a + div i:hover {
+    #nav-primary .nav-content ul.nav-pubnub-channels .selected a + div i:hover {
       color: #eeeeee;
       margin-right: 5px; }
-    #nav-primary .nav-content ul.nav-pubnub-channels .watching a + div i.action-remove:hover {
+    #nav-primary .nav-content ul.nav-pubnub-channels .selected a + div i.action-remove:hover {
       color: #ff3333 !important;
       margin-right: 5px; }
-  #nav-primary .nav-content ul.nav-pubnub-channels .watching a + i {
+  #nav-primary .nav-content ul.nav-pubnub-channels .selected a + i {
     position: absolute;
     left: 205px;
     top: 0px;
@@ -166,6 +164,14 @@
     cursor: pointer;
     color: #666666;
     display: block; }
-  #nav-primary .nav-content ul.nav-pubnub-channels .watching a + i:hover {
+  #nav-primary .nav-content ul.nav-pubnub-channels .selected a + i:hover {
     color: #9f0000;
     display: block; }
+#nav-primary .nav-content ul.nav-pubnub-channels .selected.subscribed a i:before {
+  content: "\f18e";
+  color: #66bb66; }
+#nav-primary .nav-content ul.nav-pubnub-channels .selected.unsubscribed a i:before {
+  content: "\f10c";
+  color: #888888; }
+#nav-primary .nav-content ul.nav-pubnub-channels .forbidden a, #nav-primary .nav-content ul.nav-pubnub-channels .forbidden a i:before, #nav-primary .nav-content ul.nav-pubnub-channels .forbidden i.action-pam {
+  color: maroon !important; }

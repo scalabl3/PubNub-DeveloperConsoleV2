@@ -155,10 +155,11 @@ $nav-hover-selected-border-radius: 9px
       .subscribed a
         color: #ccc
       .unsubscribed a i:before
+        content: "\f10c"
         color: #555
       .unsubscribed a
         color: #555
-      .watching
+      .selected
         background: #222
         border-radius: $nav-hover-selected-border-radius
         a
@@ -167,9 +168,6 @@ $nav-hover-selected-border-radius: 9px
           padding-bottom: 2px
         a i
           position: relative
-        a i:before
-          content: "\f18e"
-          color: #6b6
         a + div
           display: block
           margin-left: 35px
@@ -197,4 +195,15 @@ $nav-hover-selected-border-radius: 9px
         a + i:hover // right side gear icon
           color: #9f0000
           display: block
+      .selected.subscribed
+        a i:before
+          content: "\f18e"
+          color: #6b6
+      .selected.unsubscribed
+        a i:before
+          content: "\f10c"
+          color: #888
+      .forbidden
+        a, a i:before, i.action-pam
+          color: maroon !important
 

@@ -21,25 +21,30 @@ head.load({ js_channels: "assets/js/models/pubnub_presence.js"}, function () {
                         head.load({ js_app: "assets/js/models/pubnub_localstore.js"}, function () {
                             modellog.cw("LocalStore loaded");
 
-                            head.load({ js_app: "assets/js/models/pubnub_console_manager.js"}, function () {
-                                modellog.cw("Console Manager loaded");
+                            head.load({ js_app: "assets/js/models/pubnub_pam.js"}, function () {
+                                modellog.cw("PAM Manager loaded");
 
-                                head.load({ js_model_main: "assets/js/models/pubnub_model_main.js"}, function () {
-                                    modellog.cw("Collection Views loaded");
+                                head.load({ js_app: "assets/js/models/pubnub_console_manager.js"}, function () {
+                                    modellog.cw("Console Manager loaded");
 
-                                    head.load({ js_user: "assets/js/models/pubnub_user.js"}, function () {
-                                        modellog.cw("User Model loaded");
-                                    });
+                                    head.load({ js_model_main: "assets/js/models/pubnub_model_main.js"}, function () {
+                                        modellog.cw("Collection Views loaded");
 
-                                    head.ready(["js_user"], function(){
-                                        console.log("COMPLETE: Developer Console Models loaded");
-                                        console.log("(ready)");
-                                        modelReady();
-                                    });
+                                        head.load({ js_user: "assets/js/models/pubnub_user.js"}, function () {
+                                            modellog.cw("User Model loaded");
+                                        });
+
+                                        head.ready(["js_user"], function(){
+                                            console.log("COMPLETE: Developer Console Models loaded");
+                                            console.log("(ready)");
+                                            modelReady();
+                                        });
 
         //                            head.load({ js_test: "assets/js/test_models.js"}, function () {
         //                                modellog.cw("Test Script loaded");
         //                            });
+
+                                    });
                                 });
                             });
                         });
@@ -135,19 +140,6 @@ var modelReady = function() {
             DC.resumeDataStreamScroll();
         });
 
-        $("#btn-publish").click(function(){
-            if ($("#publish-message").val().length > 0) {
-                var msg = $("#publish-message").val();
-                var k = pubnubKeysListView.getSelectedModel();
-                if (k) {
-                    var c = pubnubChannelListView.getSelectedModel();
-                    if (c) {
-                        k.publish_message(c.get("name"), msg);
-                    }
-                }
-            }
-        });
-
         $("#console-settings").click(function(){
             pubnubChannelListView.unwatch_channels(true);
             DC.App.activateConsoleSettings();
@@ -179,7 +171,7 @@ var modelReady = function() {
         DC.currentSelection = {
             app: "",
             keys: "",
-            channel: ""
+            current_channel: ""
         };
         DC.saveCurrentSelection = function() {
             localStorage.setItem("currentSelection", JSON.stringify(DC.currentSelection));
@@ -199,7 +191,7 @@ var modelReady = function() {
             DC.currentSelection = {
                 app: "",
                 keys: "",
-                channel: ""
+                current_channel: ""
             };
             DC.saveCurrentSelection();
         };
@@ -289,14 +281,14 @@ var modelReady = function() {
 //                                    if (keys) {
 //                                        pubnubKeysListView.setSelectedModel(keys);
 //
-//                                        var channel = pubnubChannelListView.collection.findWhere({ name: DC.currentSelection.channel });
-//                                        if (channel) {
-//                                            pubnubChannelListView.setSelectedModel(channel);
+//                                        var current_channel = pubnubChannelListView.collection.findWhere({ name: DC.currentSelection.current_channel });
+//                                        if (current_channel) {
+//                                            pubnubChannelListView.setSelectedModel(current_channel);
 //                                        }
-//                                        else if (DC.currentSelection.channel.length > 0 ){
-//                                            keys.add_channel(DC.currentSelection.channel, true);
-//                                            channel = pubnubChannelListView.collection.findWhere({ name: DC.currentSelection.channel });
-//                                            pubnubChannelListView.setSelectedModel(channel);
+//                                        else if (DC.currentSelection.current_channel.length > 0 ){
+//                                            keys.add_channel(DC.currentSelection.current_channel, true);
+//                                            current_channel = pubnubChannelListView.collection.findWhere({ name: DC.currentSelection.current_channel });
+//                                            pubnubChannelListView.setSelectedModel(current_channel);
 //                                        }
 //                                    }
 //                                }

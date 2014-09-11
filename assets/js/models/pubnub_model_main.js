@@ -33,7 +33,7 @@ var PubnubAppListView = Backbone.CollectionView.extend({
     selectable: true,
     processKeyEvents: false,
     modelView: AppView,
-    // Clear the css, remove the views, and unset selected channel
+    // Clear the css, remove the views, and unset selected current_channel
     clear_collection: function(){
 
         this.viewManager.each(function(view) {
@@ -43,7 +43,7 @@ var PubnubAppListView = Backbone.CollectionView.extend({
             this.setSelectedModel(null);
         }
     },
-    // Empty collections that depend on what channel is selected (ChannelList, MessageList and PresenceList)
+    // Empty collections that depend on what current_channel is selected (ChannelList, MessageList and PresenceList)
     reset: function() {
         this.clear_collection();
         pubnubKeysListView.assign_collection(null);
@@ -113,7 +113,7 @@ var PubnubKeysListView = Backbone.CollectionView.extend({
         }
 
     },
-    // Clear the css, remove the views, and unset selected channel
+    // Clear the css, remove the views, and unset selected current_channel
     clear_collection: function(){
         this._reset_css();
         this.viewManager.each(function(view) {
@@ -123,7 +123,7 @@ var PubnubKeysListView = Backbone.CollectionView.extend({
             this.setSelectedModel(null);
         }
     },
-    // Empty collections that depend on what channel is selected (ChannelList, MessageList and PresenceList)
+    // Empty collections that depend on what current_channel is selected (ChannelList, MessageList and PresenceList)
     clear_dependent_collections: function() {
         pubnubFullChannelListView.clear_collection();
         pubnubFullChannelList.reset();
@@ -131,6 +131,7 @@ var PubnubKeysListView = Backbone.CollectionView.extend({
         pubnubMessageListView.clear_collection();
         pubnubHistoryListView.clear_collection();
         pubnubPresenceListView.clear_collection();
+
     }
 
 });
@@ -159,6 +160,20 @@ pubnubKeysListView.on( "selectionChanged", function() {
         pubnubFullChannelList.retrieve_channels(selectedKeys.get("subkey"));
         pubnubFullChannelListView.assign_collection(pubnubFullChannelList);
 
+        if (selectedKeys.get("hasPAM")) {
+            DC.App.showPAM();
+        }
+        else {
+            DC.App.hidePAM();
+        }
+
+        var pamlist = selectedKeys.get("pam");
+        pubnubPamListView.clear_collection();
+        pubnubPamListView = new PubnubPamListView({
+            collection: pamlist
+        }).render();
+
+
 //        DC.retrieveChannelInterval = setInterval(function() {
 //            pubnubFullChannelList.retrieve_channels(selectedKeys.get("subkey"));
 //        }, 5000);
@@ -176,6 +191,7 @@ pubnubKeysListView.on( "selectionChanged", function() {
 
     DC.App.activateStreamMessageData();
 });
+
 
 
 
@@ -206,7 +222,7 @@ var PubnubChannelListView = Backbone.CollectionView.extend({
             this._reset_css();
         }
     },
-    // Clear the css, remove the views, and unset selected channel
+    // Clear the css, remove the views, and unset selected current_channel
     clear_collection: function(){
         this._reset_css();
 
@@ -231,7 +247,7 @@ var PubnubChannelListView = Backbone.CollectionView.extend({
           }
       }
     },
-    // Empty collections that depend on what channel is selected (MessageList and PresenceList)
+    // Empty collections that depend on what current_channel is selected (MessageList and PresenceList)
     clear_dependent_collections: function() {
         pubnubMessageListView.clear_collection();
         pubnubHistoryListView.clear_collection();
@@ -250,7 +266,7 @@ pubnubChannelListView.on( "selectionChanged", function(newModel, oldModel) {
 
     if (selectedChannel) {
 
-        // Unwatch the previously watch channel (if there is one)
+        // Unwatch the previously watch current_channel (if there is one)
         if (oldModel.length > 0 && !oldModel[0].get("isNavLink")) {
             oldModel[0].unwatch();
         }
@@ -297,10 +313,42 @@ pubnubChannelListView.on( "selectionChanged", function(newModel, oldModel) {
             //DC.resumeDataStreamScroll();
         }
 
-        DC.LocalStore.channel(selectedChannel.get("name"));
+        DC.LocalStore.current_channel(selectedChannel.get("name"));
     }
 
 });
+
+
+
+
+
+
+
+// **************************************************************
+// Create PamList Collection View
+// **************************************************************
+var PubnubPamListView = Backbone.Marionette.CollectionView.extend({
+    classID: "View.PresenceList [PresenceListView]",
+    el: function() {
+        // Since we destroy and recreate this view (more common with the Marionette version), conditionally re-add the binding element
+        if (!$("#pubnub-pam-bychannel").length) {
+            $("#panel-pam-audit div.data-list").append('<ul id="pubnub-pam-bychannel">');
+        }
+        return $("ul#pubnub-pam-bychannel");
+    },
+    childView: PamView,
+    initialize: function() {
+        // Clear out any sample data
+        this.$el.find("li.pam-item").remove();
+    },
+    clear_collection: function() {
+        this.destroy();
+    }
+});
+
+// Create instance of PubnubPresenceListView
+var pubnubPamListView = new PubnubPamListView();
+
 
 
 
@@ -341,6 +389,9 @@ var PubnubMessageListView = Backbone.Marionette.CollectionView.extend({
 var pubnubMessageListView = new PubnubMessageListView();
 
 
+
+
+
 // **************************************************************
 // Create HistoryList Collection View
 // **************************************************************
@@ -366,6 +417,11 @@ var PubnubHistoryListView = Backbone.Marionette.CollectionView.extend({
 
 // Create instance of PubnubMessageListView
 var pubnubHistoryListView = new PubnubHistoryListView();
+
+
+
+
+
 
 
 
@@ -399,6 +455,12 @@ var pubnubPresenceListView = new PubnubPresenceListView();
 
 
 
+
+
+
+
+
+
 // **************************************************************
 // Create ChannelList Collection View
 // **************************************************************
@@ -425,7 +487,7 @@ var PubnubFullChannelListView = Backbone.CollectionView.extend({
 //            }
         }
     },
-    // Clear the css, remove the views, and unset selected channel
+    // Clear the css, remove the views, and unset selected current_channel
     clear_collection: function(){
         this._reset_css();
 

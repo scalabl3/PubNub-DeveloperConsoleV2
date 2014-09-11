@@ -20,6 +20,18 @@ input:-ms-input-placeholder {
 input:focus::-webkit-input-placeholder {
   color: transparent !important; }
 
+div.nav-content::-webkit-scrollbar-track {
+  background: #333333; }
+
+div.nav-content::-webkit-scrollbar {
+  width: 8px; }
+
+div.nav-content::-webkit-scrollbar * {
+  background: #333333; }
+
+div.nav-content::-webkit-scrollbar-thumb {
+  background: #555555; }
+
 .navbar-header {
   width: 100%; }
 
@@ -92,7 +104,7 @@ input:focus::-webkit-input-placeholder {
     right: 0px;
     bottom: 50px;
     overflow-x: hidden;
-    overflow-y: scroll; }
+    overflow-y: auto; }
 
 #flow-header.expand {
   left: 0px; }
@@ -184,20 +196,20 @@ input:focus::-webkit-input-placeholder {
         text-align: center;
         float: right;
         margin-top: 0.5px; }
-  #content-flow #data-panel, #content-flow #presence-panel {
+  #content-flow #data-panels, #content-flow #presence-panel {
     position: relative;
     height: 100%;
     display: block; }
-  #content-flow #data-panel {
+  #content-flow #data-panels {
     width: 61.8%;
     float: left;
     z-index: 1032;
     white-space: nowrap;
     min-width: 250px; }
     @media only screen and (max-width: 768px) {
-      #content-flow #data-panel {
+      #content-flow #data-panels {
         width: 100%; } }
-    #content-flow #data-panel .form-message-data-search {
+    #content-flow #data-panels .form-message-data-search {
       padding: 0.731rem;
       width: 100%;
       position: absolute;
@@ -206,23 +218,23 @@ input:focus::-webkit-input-placeholder {
       margin: 0px;
       background: none repeat scroll 0% 0% #666666;
       height: 48px; }
-    #content-flow #data-panel .form-group {
+    #content-flow #data-panels .form-group {
       width: 100%;
       display: -webkit-flex;
       -webkit-flex-direction: row;
       display: flex;
       flex-direction: row;
       float: left; }
-      #content-flow #data-panel .form-group input {
+      #content-flow #data-panels .form-group input {
         display: inline-block;
         flex-grow: 3;
         border-radius: 4px; }
-      #content-flow #data-panel .form-group .btn {
+      #content-flow #data-panels .form-group .btn {
         border-radius: 4px;
         width: 140px; }
-    #content-flow #data-panel .bg-paused {
+    #content-flow #data-panels .bg-paused {
       background-color: #ebbd5c; }
-    #content-flow #data-panel .panel-infobar {
+    #content-flow #data-panels .panel-infobar {
       width: 100%;
       position: absolute;
       z-index: 1034;
@@ -231,52 +243,40 @@ input:focus::-webkit-input-placeholder {
       margin: 0px;
       border-top: double #cccccc;
       text-align: center; }
-      #content-flow #data-panel .panel-infobar div {
+      #content-flow #data-panels .panel-infobar div {
         display: inline-block;
         font-size: 11px;
         color: #555555;
         margin: 0px 10px;
         line-height: 43px; }
-      #content-flow #data-panel .panel-infobar button {
+      #content-flow #data-panels .panel-infobar button {
         padding: 1px 15px;
         margin-top: -2px; }
   #content-flow #btn-unseen {
     margin-left: 4px; }
   #content-flow #btn-publish {
     margin-left: 4px; }
-  #content-flow #presence-panel, #content-flow #panel-empty-right, #content-flow #panel-history-form {
+  #content-flow .panel-left, #content-flow .panel-right {
+    display: none; }
+  #content-flow .panel-right {
     width: 38.2%;
     border-left: 1px solid silver;
-    float: right; }
-    @media only screen and (max-width: 768px) {
-      #content-flow #presence-panel, #content-flow #panel-empty-right, #content-flow #panel-history-form {
-        display: none;
-        width: 100%; } }
-  #content-flow #panel-empty-right {
-    display: none;
-    position: relative;
-    height: 100%; }
-  #content-flow #panel-history-form {
-    display: none;
-    position: relative;
-    height: 100%; }
-    #content-flow #panel-history-form form {
-      width: 100%; }
-  #content-flow #panel-stream-message-data, #content-flow #stream-presence-data, #content-flow #panel-full-channel-list, #content-flow #panel-console-settings, #content-flow #panel-pam-manager, #content-flow #panel-history-explorer {
+    float: right;
     height: 100%;
     position: relative;
     box-sizing: border-box; }
-  #content-flow #panel-full-channel-list {
-    display: none; }
-    #content-flow #panel-full-channel-list .panel-toolbar {
-      background-color: #333399;
-      color: white; }
-  #content-flow #panel-console-settings {
-    display: none; }
-  #content-flow #panel-history-explorer {
-    display: none; }
-  #content-flow #panel-pam-manager {
-    display: none; }
+    @media only screen and (max-width: 768px) {
+      #content-flow .panel-right {
+        display: none;
+        width: 100%; } }
+  #content-flow .panel-right {
+    position: relative;
+    height: 100%; }
+  #content-flow #panel-history-form form {
+    width: 100%; }
+  #content-flow #panel-full-channel-list .panel-toolbar {
+    background-color: #333399;
+    color: white; }
   #content-flow .data-list {
     position: absolute;
     left: 0px;
@@ -285,7 +285,7 @@ input:focus::-webkit-input-placeholder {
     margin: 0px;
     padding: 0px;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     transition: opacity 50ms linear 0s;
     top: 80px; }
   #content-flow .data-list-table {
@@ -324,3 +324,32 @@ input:focus::-webkit-input-placeholder {
       border-radius: 4px; }
 #panel-full-channel-list .data-list {
   bottom: 35px; }
+
+#panel-console-settings .section {
+  padding: 20px;
+  border-bottom: 1px solid #cccccc; }
+#panel-console-settings .title {
+  font-weight: bold;
+  margin-bottom: 10px; }
+#panel-console-settings p {
+  white-space: normal; }
+
+#panel-pam-manager .section {
+  padding: 20px;
+  border-bottom: 1px solid #cccccc; }
+#panel-pam-manager .title {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 10px; }
+#panel-pam-manager p {
+  white-space: normal; }
+#panel-pam-manager .checkbox {
+  margin: 0;
+  min-height: 10px; }
+#panel-pam-manager .form-group {
+  margin: 10px 0; }
+#panel-pam-manager p.bg-warning {
+  padding: 10px; }
+#panel-pam-manager p.description {
+  font-size: 12px;
+  color: #666666; }

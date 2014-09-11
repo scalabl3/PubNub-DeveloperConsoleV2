@@ -44,7 +44,7 @@ var App = Backbone.Model.extend({
         this.set("uuid", "pubnub-developer-console");
         this.set("appKeys", new KeysList());
     },
-    addAppKey: function(name, pkey, skey, secretKey) {
+    addAppKey: function(name, pkey, skey, secretKey, features) {
         var klist = this.get("appKeys");
 
         var k = new Keys({
@@ -55,7 +55,11 @@ var App = Backbone.Model.extend({
             subkey: skey,
             secretKey: secretKey
         });
-
+        if (_.isObject(features)) {
+            _.forEach(features, function(val,variable){
+                k.set(variable,val);
+            });
+        }
         klist.add(k);
         this.set("appKeys", klist);
     },

@@ -36,6 +36,7 @@ var Keys = Backbone.Model.extend({
     classID: "Model.Keys [Keys]",
     defaults: {
         app: null,
+        appName: null,
         name: "[NONE]",
         pubkey: "",
         subkey: "",
@@ -47,6 +48,7 @@ var Keys = Backbone.Model.extend({
         isActive: false,
         pubnub: null,
         channels: null,
+        pam: null,
         enabled: false,
         hasPresence: false,
         hasHistory: false,
@@ -57,25 +59,189 @@ var Keys = Backbone.Model.extend({
     },
     initialize: function() {
         var c = new ChannelList();
-        // Add Default Nav View Channel List using global_here_now as first "channel" item
+        // Add Default Nav View Channel List using global_here_now as first "current_channel" item
         c.add({ name: "Add/View Channel List", navID: "link-view-all-channels", navIcon: "fa-list-alt", isNavLink: true, sortValue: "!" });
-        //c.add({ name: "Add Channels...", navID: "link-add-channel", navIcon: "fa-plus", isNavLink: true, sortValue: "{" });
+        //c.add({ name: "Add Channels...", navID: "link-add-current_channel", navIcon: "fa-plus", isNavLink: true, sortValue: "{" });
         this.set("channels", c);
+
+        var p = new PamList();
+        this.set("pam", p);
     },
     connect: function() {
+        var self = this;
         if (!this.get("isConnected")) {
             console.log ("PN: connecting " + this.get("appName") + "::" + this.get("name"));
             this.set("pubnub", PUBNUB.init({
                 publish_key	 : this.get("pubkey"),
                 subscribe_key : this.get("subkey"),
+                secret_key: this.get("secretKey"),
                 uuid: "pubnub-developer-console",
+                //auth_key: "devconsole",
                 ssl: true
             }));
+            //this.pam_test();
+            DC.App.updatingPAM();
+            this.pam_audit();
         }
         else {
             //console.log ("PUBNUB: already connected to " + this.get("appName") + "::" + this.get("name"));
         }
         this.set("isConnected", true);
+    },
+    pam_test: function() {
+        this.attributes.pubnub.grant({
+            read: true,
+            write: true,
+            ttl: 1,
+            callback: function(r){
+                //console.log(r);
+            }
+        });
+        this.attributes.pubnub.grant({
+            channel: "-pnpres",
+            read: true,
+            write: true,
+            callback: function(r){
+                //console.log(r);
+            }
+        });
+        this.attributes.pubnub.grant({
+            ttl: 0,
+            channel: "devconsole",
+            auth_key: "devconsole",
+            read: true,
+            write: true,
+            callback: function(r){
+                //console.log(r);
+            }
+        });
+        this.attributes.pubnub.grant({
+            ttl: 5,
+            channel: "devconsole2",
+            auth_key: "devconsole2",
+            read: true,
+            write: true,
+            callback: function(r){
+                //console.log(r);
+            }
+        });
+
+        this.attributes.pubnub.grant({
+            ttl: 0,
+            channel: "devconsole-pnpres",
+            auth_key: "devconsole",
+            read: true,
+            write: true,
+            callback: function(r){
+                //console.log(r);
+            },
+            error: function(e) {
+                console.error(e);
+            }
+        });
+    },
+    pam_grant: function(params) {
+        var self = this;
+
+        params.global = typeof params.global !== 'undefined' ? params.global : false;
+        params.sub = typeof params.sub !== 'undefined' ? params.sub : false;
+        params.pub = typeof params.pub !== 'undefined' ? params.pub : false;
+        params.ttl = typeof params.ttl !== 'undefined' ? params.ttl : 1440;
+
+        DC.App.updatingPAM();
+
+        if (params.global) {
+            this.attributes.pubnub.grant({
+                read: params.sub,
+                write: params.pub,
+                ttl: params.ttl,
+                callback: function(r) {
+                    console.log("\tPN: Update Global access Read: " + DC.App.checkValue(r.r, 'int', 1) + ",  Write: " + DC.App.checkValue(r.w, 'int', 1));
+                    var plist = self.get("pam");
+                    var global = plist.findWhere({ isGlobal: true });
+                    global.set("read", DC.App.checkValue(r.r, 'int', 1));
+                    global.set("write", DC.App.checkValue(r.w, 'int', 1));
+                    global.set("includePresence", DC.App.checkValue(r.r, 'int', 1));
+                }
+            });
+        }
+        else {
+            if (_.isUndefined(params.channel) || _.isUndefined(params.authkey)) {
+                console.error("For Non-Global access, channel name and authkey are required");
+            }
+            else {
+                this.attributes.pubnub.grant({
+                    read: params.sub,
+                    write: params.pub,
+                    ttl: params.ttl,
+                    callback: function(r) {
+                        console.log("Channel Grant: ", r);
+                        setTimeout(self.pam_audit(), 1000);
+                    }
+                });
+            }
+        }
+    },
+    pam_audit: function(){
+        if (this.get("hasPAM")) {
+            DC.App.showPAM();
+            var self = this;
+            console.log ("PN: retrieving PAM audit " + this.get("appName") + "::" + this.get("name"));
+            this.attributes.pubnub.audit({
+                callback: function(audit) {
+                    //console.log(audit);
+                    var global = new Pam({
+                        isGlobal: true,
+                        ttl: DC.App.checkValue(audit.ttl, 'int') ? audit.ttl : 0,
+                        read: DC.App.checkValue(audit.r, 'int', 1),
+                        write: DC.App.checkValue(audit.w, 'int', 1),
+                        hasContent: true,
+                        includePresence: DC.App.checkValue(audit.r, 'int', 1)
+                    });
+
+                    var plist = self.get("pam");
+                    plist.reset();
+                    plist.add(global);
+
+                    _.forEach(audit.channels, function(v, chan){
+                        if (!chan.endsWith("-pnpres")) {
+                            var p = new Pam({
+                                isGlobal: false,
+                                channel: chan,
+                                channel_presence: chan + "-pnpres"
+                            });
+                            _.forEach(v.auths, function(vi, authkey){
+                                //console.log(authkey, vi);
+                                p.set({
+                                    authkey: authkey,
+                                    ttl: DC.App.checkValue(vi.ttl, 'int') ? vi.ttl : 0,
+                                    read: DC.App.checkValue(vi.r, 'int', 1),
+                                    write: DC.App.checkValue(vi.w, 'int', 1),
+                                    hasContent: true
+                                });
+                            });
+                            plist.add(p);
+                        }
+                    });
+
+                    _.forEach(audit.channels, function(v, chan) {
+                        if (chan.endsWith("-pnpres")) {
+                            chan = chan.substring(0, chan.length - 7);
+                            if (chan.length > 0) {
+                                var p = plist.findWhere({ channel: chan });
+                                p.set({ includePresence: true });
+                            }
+                        }
+                    });
+
+                    DC.App.updatingPAMComplete();
+                }
+            });
+        }
+        else {
+            DC.App.hidePAM();
+        }
+
     },
     disconnect: function() {
         if (this.get("isConnected")) {
@@ -93,8 +259,9 @@ var Keys = Backbone.Model.extend({
         this.set("pubnub", null);
         this.set('isConnected', false)
     },
-    add_channel: function(name, subscribe) {
+    add_channel: function(name, subscribe, completeCallback, bypassLocalStore) {
         subscribe = typeof subscribe !== 'undefined' ? subscribe : false;
+        bypassLocalStore = typeof bypassLocalStore !== 'undefined' ? bypassLocalStore : false;
 
         // Add Channel to ChannelList
         var channels = this.get("channels");
@@ -104,27 +271,35 @@ var Keys = Backbone.Model.extend({
         if (!added) {
             newChannel = channels.add({appKeys: this, app: this.get("app"), name: name, sortValue: name.toLowerCase() });
             this.set("channels", channels);
+
             // Save current list of channels to local storage
-            DC.LocalStore.channels(name);
+            if (!bypassLocalStore) {
+                DC.LocalStore.channels(this.get("appName"), this.get("name"), name);
+            }
         }
         if (subscribe) {
-            this.subscribe_channel(name);
+            this.subscribe_channel(name, completeCallback);
+        }
+        else {
+            if (_.isFunction(completeCallback)) {
+                completeCallback();
+            }
         }
 
         return newChannel;
     },
     remove_channel: function(name) {
-        this.unsubscribe_channel(name);
+        this.unsubscribe_channel(name, function() {
+            // Remove subscribed status from Full Channel List
+            pubnubFullChannelList.set_unsubscribed(name);
 
-        // Remove from ChannelList
-        var channels = this.get("channels");
-        channels.remove(channels.findWhere({name: name}));
-        this.set("channels", channels);
+            // Remove from ChannelList
+            var channels = this.get("channels");
+            channels.remove(channels.findWhere({name: name}));
 
-        // Remove subscribed status from Full Channel List
-        pubnubFullChannelList.set_unsubscribed(name);
-        // Save current list of channels to local storage
-        DC.LocalStore.channels(this.channel_names());
+            // Save current list of channels to local storage
+            DC.LocalStore.channels(this.channel_names());
+        });
     },
     subscribe_channel: function(name, completeCallback){
         var self = this;
@@ -137,6 +312,7 @@ var Keys = Backbone.Model.extend({
                 console.log("\tPN: subscribing to " + name);
                 this.attributes.pubnub.subscribe({
                     channel: subChannel.get("name"),
+                    auth_key: "devconsole",
                     message: function (message, env, channel) {
                         subChannel.receive_message(message, env, channel);
                     },
@@ -155,6 +331,22 @@ var Keys = Backbone.Model.extend({
                         });
                         if (_.isFunction(completeCallback)) {
                             completeCallback();
+                        }
+                    },
+                    error: function(e) {
+                        console.log("\tPN: subscribe error: ", e);
+                        if (!_.isUndefined(e) && e.message === "Forbidden") {
+                            self.attributes.pubnub.unsubscribe({
+                                channel: subChannel.get("name")
+                            });
+                            subChannel.set("forbidden", true);
+                            DC.App.activatePAM("Channel", name);
+                        }
+                        else if (_.isUndefined(e)) {
+                            self.attributes.pubnub.unsubscribe({
+                                channel: subChannel.get("name")
+                            });
+                            console.log("\tPN: unspecified error subscribing to " + name);
                         }
                     }
                 });
@@ -175,10 +367,9 @@ var Keys = Backbone.Model.extend({
 
             // Remove subscribed status from Full Channel List
             pubnubFullChannelList.set_unsubscribed(name);
-
-            if (_.isFunction(completeCallback)) {
-                completeCallback();
-            }
+        }
+        if (_.isFunction(completeCallback)) {
+            completeCallback();
         }
     },
     channel_names: function() {
@@ -227,14 +418,17 @@ var Keys = Backbone.Model.extend({
                                 start = messages[1];
                                 params.start = start;
 
-
+                                console.log(msgs);
                                 _.forEach(msgs, function(m) {
                                     history.push(m)
                                 });
 
+                                if (_.isEmpty(msgs)) {
+                                    return;
+                                }
                                 if (history.length >= totalCount) {
                                     return completeCallback(history);
-                                } 
+                                }
                                 //console.log(totalCount - history.length);
                                 if (totalCount - history.length > 100) {
                                     params.count = 100;
@@ -257,9 +451,12 @@ var Keys = Backbone.Model.extend({
             }
 
             options.callback = function(messages) {
+                var i = 1;
                 _.forEach(messages, function(m){
-                    var thisIndex = hlist.length + 1 || 1;
-                    hlist.add({ displayIndex: thisIndex, timetoken: m.timetoken, content: m.message });
+                    var m = new Message({ displayIndex: i, timetoken: m.timetoken, content: m.message });
+                    console.log(m);
+                    hlist.add(m);
+                    i++;
                 });
                 subChannel.set("history", hlist);
             };
@@ -285,7 +482,7 @@ var KeysView = Backbone.View.extend({
     classID: "View.Keys [KeysView]",
     tagName: 'li',
     className: 'keys',
-    rawTemplate: '<a href="#"><i data-action="connect" class="fa fa-key"></i> <span>{{name}}</span></a><i data-action="edit" class="fa fa-users connected-status connected"></i>',
+    rawTemplate: '<a href="#"><i data-action="connect" class="fa fa-key"></i> <span>{{name}}</span></a><i data-action="edit" class="fa fa-user action-pam connected-status connected"></i>',
     compiledTemplate: null,
 
     initialize: function(){
@@ -294,6 +491,13 @@ var KeysView = Backbone.View.extend({
         this.compiledTemplate = Handlebars.compile(this.rawTemplate);
     },
 
+    events: {
+        "click .action-pam": 'do_pam'
+    },
+
+    do_pam: function() {
+        DC.App.activatePAM("AppKeys", this.model.get("name"));
+    },
     toggle_active: function() { this.model.toggle_active(); },
 
     render: function() {

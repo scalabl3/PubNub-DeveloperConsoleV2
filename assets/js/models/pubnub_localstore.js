@@ -18,6 +18,23 @@ DC.BaseClasses.localstore = stampit().enclose(function () {
         }
     };
 
+    function _add_channel (appName, keysName, channel_or_channels) {
+
+        console.log(appName, keysName, channel_or_channels, _current);
+
+        if (_.isString(channel_or_channels)) {
+            // Add if unique
+            if (_.indexOf(_current.channelList[appName][keysName], channel_or_channels) === -1) {
+                _current.channelList[appName][keysName].push(channel_or_channels);
+            }
+        }
+        // When setting an array, replace list
+        else if (_.isArray(channel_or_channels)) {
+            _current.channelList[appName][keysName] = channel_or_channels;
+        }
+
+    }
+
     // Public API
     return stampit.mixIn(this, {
         init: function() {
@@ -31,7 +48,7 @@ DC.BaseClasses.localstore = stampit().enclose(function () {
                     user.retrieve_apps({
                         success: function() {
                             user.save();
-                            DC.App.user(user);
+                            DC.App.user = user;
                             self.getCurrentSelection(function(){
                                 // Insert the Demo Account into the App List
                                 pubnubAppList.addDemoAccount();
@@ -49,6 +66,9 @@ DC.BaseClasses.localstore = stampit().enclose(function () {
             return this;
         },
         app: function(v) {
+            if (_.isUndefined(_current.channelList)) {
+                _current.channelList = {};
+            }
             if (v) {
                 _current.app = v;
                 if (_.isUndefined(_current.channelList[v])) {
@@ -70,7 +90,7 @@ DC.BaseClasses.localstore = stampit().enclose(function () {
             }
             return _current.keys;
         },
-        channel: function(v) {
+        current_channel: function(v) {
             if (v) {
                 _current.channel = v;
                 this.saveCurrentSelection();
@@ -78,29 +98,35 @@ DC.BaseClasses.localstore = stampit().enclose(function () {
             }
             return _current.channel;
         },
-        channels: function(v) {
-            if (v) {
+        remove_channel: function(appName, keysName, channelName) {
+            console.json(_current.channelList);
+            console.log(_.pull(_current.channelList[appName][keysName], channelName));
+            console.json(_current.channelList);
+            this.saveCurrentSelection();
+            return this;
+        },
+        channels: function(appName, keysName, channel_or_channels) {
+            if (appName && keysName && channel_or_channels) {
+                //console.log(v);
                 // If channelList not initialized with App Name and AppKeys Name
-                if (!_.isObject(_current.channelList[_current.app])) {
-                    _current.channelList[_current.app] = {};
-                    _current.channelList[_current.app][_current.keys] = [];
+                if (!_.isObject(_current.channelList[appName])) {
+                    _current.channelList[appName] = {};
+                    _current.channelList[appName][keysName] = [];
                     this.saveCurrentSelection();
                 }
-                if (_.isString(v)) {
-                    // Add if unique
-                    if (_.indexOf(_current.channelList[_current.app][_current.keys], v) === -1) {
-                        _current.channelList[_current.app][_current.keys].push(v);
-                    }
-                }
-                // When setting an array, replace list
-                else if (_.isArray(v)) {
-                    _current.channelList[_current.app][_current.keys] = v;
-                }
+
+                _add_channel(appName, keysName, channel_or_channels);
+
                 this.saveCurrentSelection();
+
                 return this;
             }
-
-            return _current.channelList;
+            else {
+                return _current.channelList;
+            }
+        },
+        currentSelection: function() {
+            return _current;
         },
         activateCurrentSelection: function() {
             // From LocalStorage to _current, Add all the Channels for Each AppKeys in each App
@@ -117,6 +143,7 @@ DC.BaseClasses.localstore = stampit().enclose(function () {
                     var thisAppKeys = thisApp.get("appKeys");
 
                     if (thisAppKeys) {
+
                         // For Each AppKeys in _current.channelList[appName]
                         _.forEach(_.keys(_current.channelList[appName]), function(appKeysName) {
 
@@ -127,7 +154,8 @@ DC.BaseClasses.localstore = stampit().enclose(function () {
 
                                 // For Each Channel in _current.channelList[appName][appKeysName]
                                 _.forEach(_current.channelList[appName][appKeysName], function(chan){
-                                    keys.add_channel(chan);
+                                    //console.log("add_channel: ", appName, appKeysName, chan, " ++ ", keys.get("name"));
+                                    keys.add_channel(chan, false, null, true);
                                 });
                             }
                         });
@@ -160,10 +188,7 @@ DC.BaseClasses.localstore = stampit().enclose(function () {
                         // Select the found Channel
                         pubnubChannelListView.setSelectedModel(channel);
 
-                        setTimeout(function(){
-                            $("#nav-pubnub-channel-list li.selected").find('.action-history').trigger('click');
-                        }, 1000);
-
+                        DC.App.activateInitialView();
 
                     }
                     else {
@@ -179,12 +204,13 @@ DC.BaseClasses.localstore = stampit().enclose(function () {
             }
         },
         saveCurrentSelection: function() {
-            console.json(_current);
+            //console.log("SAVE");
+            //console.json(_current);
             localStorage.setItem("currentSelection", JSON.stringify(_current));
         },
         getCurrentSelection: function(completeCallback) {
             _current = JSON.parse(localStorage.getItem("currentSelection"));
-
+            console.log(JSON.stringify(JSON.parse(localStorage.getItem("currentSelection")), true, 2));
             if (!_current || _current == null || !_current.app || _current.app == null) {
                 console.log("Something emptying!");
                 console.json(_current);

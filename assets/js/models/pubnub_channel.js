@@ -40,6 +40,7 @@ var Channel = Backbone.Model.extend({
         name: null,
         subscribed: false,
         watching: false,
+        forbidden: false,
         messagesReceived: 0,
         messagesDisplayed: 0,
         messagesNew: 0,
@@ -164,7 +165,7 @@ var ChannelView = Backbone.View.extend({
     compiledTemplate: null,
 
     initialize: function () {
-        this.model.on('change:name change:subscribed change:watching', function(a,b,c){
+        this.model.on('change:name change:subscribed change:watching change:forbidden', function(a,b,c){
             var changedKey = _.first(_.keys(a.changed));
             var changedKV = {};
             changedKV[changedKey] = a.previousAttributes()[changedKey];
@@ -198,28 +199,29 @@ var ChannelView = Backbone.View.extend({
         DC.App.activateHistoryExplorer();
     },
     do_pam: function() {
-        DC.App.activatePAM();
+        DC.App.activatePAM("Channel", this.model.get("name"));
     },
     do_remove: function() {
-        var keys = this.model.get("keys");
+        var keys = this.model.get("appKeys");
         if (keys) {
             keys.remove_channel(this.model.get("name"));
         }
     },
     do_unsub: function() {
-        var keys = this.model.get("keys");
+        console.log(this.model.attributes);
+        var keys = this.model.get("appKeys");
         if (keys) {
+            console.log(keys);
             if (this.model.get("subscribed")) {
                 keys.unsubscribe_channel(this.model.get("name"));
                 pubnubChannelListView.setSelectedModel(null);
             }
             else {
-                keys.subscribe_channel(this.model.get("name"));
+                console.log("not subscribed");
             }
         }
     },
     update_state: function() {
-
 
             if (this.model.get("subscribed")) {
                 this.$el.addClass("subscribed");
@@ -235,6 +237,13 @@ var ChannelView = Backbone.View.extend({
             }
             else {
                 this.$el.removeClass("watching");
+            }
+
+            if (this.model.get("forbidden")) {
+                this.$el.addClass("forbidden");
+            }
+            else {
+                this.$el.removeClass("forbidden");
             }
 
     },
