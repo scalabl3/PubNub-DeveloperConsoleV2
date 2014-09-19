@@ -88,8 +88,9 @@ var modelReady = function() {
         $("#btn-login-action").click(function(e){
 
             // login state (prevents double clicks, multiple logins)
-            if (!DC.loggingIn) {
-                DC.loggingIn = true;
+            if (!DC.App.isLoggingIn()) {
+
+                DC.App.isLoggingIn(true);
 
 
                 var btn = $("#btn-login-action");
@@ -98,24 +99,23 @@ var modelReady = function() {
 
                     if ($("#password").val() !== "") {
 
-                        DC.user = new User({ id: 1 });
-                        btn.prop("disabled", true);
-                        DC.user.retrieve_account({
+                        var user = new User({ id: 1 });
+                        user.retrieve_account({
                             email: $("#email").val(),
                             password: $("#password").val(),
                             success: function(){
-                                DC.setLoggedIn();
-                                DC.addDemoAccount();
+                                DC.App.loggedIn(true);
                                 if ($("#remember").prop('checked')) {
                                     // Store the appropriate info here
-                                    console.log(DC.user.get("token"));
-                                    DC.user.save();
+                                    console.log(user.get("token"));
+                                    user.save();
+                                    DC.App.user = user;
+                                    pubnubAppList.addDemoAccount();
                                 }
 
                             },
                             error: function() {
-                                btn.prop("disabled", false);
-                                DC.loggingIn = false;
+                                DC.App.loggedIn(false);
                             }
                         });
                     }

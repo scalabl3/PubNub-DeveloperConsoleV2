@@ -44,7 +44,7 @@ DC.BaseClasses.localstore = stampit().enclose(function () {
             user.fetch({
                 success: function(u) {
                     console.log("PUBNUB: account - found in local storage, logout enabled");
-                    DC.App.setLoggedIn();
+                    DC.App.loggedIn(true);
                     user.retrieve_apps({
                         success: function() {
                             user.save();

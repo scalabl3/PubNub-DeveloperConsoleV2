@@ -1,6 +1,7 @@
 DC.BaseClasses.console = stampit().enclose(function () {
 
     var _user = null;
+    var _loggedIn = false;
     var _loggingIn = false;
     var _consoleAuthKey = "";
 
@@ -81,6 +82,14 @@ DC.BaseClasses.console = stampit().enclose(function () {
                key += (Math.floor((Math.random() * 9) + 1)).toString();
             });
             $("#pubnub-console-authkey").val(key);
+            _.times(6, function(n){
+                console.log(n);
+                setTimeout(function(){
+                    $("#btn-pam-update-console-authkey").toggleClass("backgroundGreen");
+                }, (n) * 1000);
+            });
+
+
         });
 
         $("#btn-pam-audit-reload").click(function(e){
@@ -135,22 +144,38 @@ DC.BaseClasses.console = stampit().enclose(function () {
         isLoggingIn: function(v) {
             if (v) {
                 _loggingIn = v;
+                $("#btn-login-action").prop("disabled", true);
                 return this;
             }
             return _loggingIn;
         },
-        setLoggedIn: function() {
+        loggedIn: function(v) {
 
-            var self = this;
-            // enable login button after 1 second (prevents double clicks, multiple logins)
+            // this function is always called after isLoggingIn, so we can say we are done with trying
             setTimeout(function(){
                 self.isLoggingIn(false);
             }, 1000);
 
-            $("#btn-login-action").prop("disabled", false);
-            $('#modal-pubnub-login').modal('hide');
-            $("#pubnub-login").addClass("hidden");
-            $("#pubnub-logout").removeClass("hidden");
+            if (v) {
+                var self = this;
+                // enable login button after 1 second (prevents double clicks, multiple logins)
+
+                // If we have loggedIn, disable login button, close modal, and show Logout Button, hide Login button
+                $("#btn-login-action").prop("disabled", true);
+                $('#modal-pubnub-login').modal('hide');
+                $("#pubnub-login").addClass("hidden");
+                $("#pubnub-logout").removeClass("hidden");
+                _loggedIn = true;
+            }
+            else {
+                // If we have logged out, enable login button, hide Logout button, and show Login button
+                $("#btn-login-action").prop("disabled", false);
+                $("#pubnub-login").removeClass("hidden");
+                $("#pubnub-logout").addClass("hidden");
+                _loggedIn = false;
+            }
+
+            return this;
         },
         showPAM: function() {
             $("#panel-pam-manager .pam-disabled").hide();
